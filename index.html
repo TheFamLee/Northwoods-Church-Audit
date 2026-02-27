@@ -1189,6 +1189,27 @@ LOGIN WIDGET (separate &lt;mpp-user-login&gt; component):
 
 </div><!-- /pw-content -->
 <script>
+function navigateToHash(){
+  var hash=window.location.hash.replace('#','');
+  if(!hash)return;
+  // Try to find element by id first
+  var target=document.getElementById(hash);
+  // If not found, try finding a section whose data-section matches
+  if(!target){
+    target=document.querySelector('[data-section="'+hash+'"]');
+  }
+  if(!target)return;
+  // Find the closest .section parent and open it
+  var section=target.closest('.section')||target;
+  if(section&&!section.classList.contains('open')){
+    section.classList.add('open');
+  }
+  // Scroll to it after a brief delay to let the DOM render
+  setTimeout(function(){target.scrollIntoView({behavior:'smooth',block:'start'});},150);
+}
+window.addEventListener('hashchange',function(){
+  if(sessionStorage.getItem('nw-audit-auth')==='1')navigateToHash();
+});
 function checkPw(){
   var p=document.getElementById('pw-input').value;
   // Simple client-side gate - not meant for true security, just casual access control
@@ -1196,6 +1217,7 @@ function checkPw(){
     document.getElementById('pw-gate').style.display='none';
     document.getElementById('pw-content').style.display='block';
     sessionStorage.setItem('nw-audit-auth','1');
+    navigateToHash();
   } else {
     document.getElementById('pw-error').style.display='block';
     document.getElementById('pw-input').value='';
@@ -1206,6 +1228,7 @@ function checkPw(){
 if(sessionStorage.getItem('nw-audit-auth')==='1'){
   document.getElementById('pw-gate').style.display='none';
   document.getElementById('pw-content').style.display='block';
+  navigateToHash();
 }
 document.addEventListener('DOMContentLoaded',function(){document.getElementById('pw-input').focus()});
 function toggleSection(header){header.parentElement.classList.toggle('open')}
