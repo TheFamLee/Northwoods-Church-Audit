@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Northwoods Church - Pre-Launch Site Audit</title>
+<style>
+:root{--p0:#dc2626;--p0bg:#fef2f2;--p1:#ea580c;--p1bg:#fff7ed;--p2:#ca8a04;--p2bg:#fefce8;--p3:#2563eb;--p3bg:#eff6ff;--ok:#16a34a;--okbg:#f0fdf4;--gray:#64748b;--graybg:#f8fafc;--border:#e2e8f0;--bg:#fff;--text:#1e293b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--text);background:#f1f5f9;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:16px}
+header{background:linear-gradient(135deg,#1e293b 0%,#334155 100%);color:#fff;padding:32px 0;margin-bottom:24px}
+header .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+header h1{font-size:1.75rem;font-weight:700}
+header p{opacity:.8;font-size:.9rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.75rem;font-weight:600;color:#fff}
+.badge-p0{background:var(--p0)}.badge-p1{background:var(--p1)}.badge-p2{background:var(--p2)}.badge-p3{background:var(--p3)}
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+.stat{background:var(--bg);border-radius:12px;padding:20px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.stat .num{font-size:2rem;font-weight:800;line-height:1.2}
+.stat .label{font-size:.8rem;color:var(--gray);text-transform:uppercase;letter-spacing:.05em}
+.stat-p0 .num{color:var(--p0)}.stat-p1 .num{color:var(--p1)}.stat-p2 .num{color:var(--p2)}.stat-p3 .num{color:var(--p3)}.stat-ok .num{color:var(--ok)}
+.filters{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters label{font-size:.85rem;font-weight:600;margin-right:4px}
+.filters button{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:.8rem;font-weight:500;transition:all .15s}
+.filters button:hover{border-color:#94a3b8}
+.filters button.active{background:var(--text);color:#fff;border-color:var(--text)}
+.section{background:var(--bg);border-radius:12px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.section-header{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid transparent;transition:background .15s;user-select:none}
+.section-header:hover{background:var(--graybg)}
+.section-header h2{font-size:1rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.section-header .arrow{transition:transform .2s;font-size:.75rem;color:var(--gray)}
+.section.open .section-header{border-bottom-color:var(--border)}
+.section.open .arrow{transform:rotate(90deg)}
+.section-body{display:none;padding:16px 20px}
+.section.open .section-body{display:block}
+.page-group{margin-bottom:20px}
+.page-group h3{font-size:.95rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.page-group h3 a{color:var(--p1);text-decoration:none;font-family:monospace;font-size:.85rem}
+.page-group h3 a:hover{text-decoration:underline}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin-bottom:12px}
+th{text-align:left;padding:8px 10px;background:var(--graybg);border-bottom:2px solid var(--border);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;color:var(--gray)}
+td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr.row-p0{background:var(--p0bg)}tr.row-p1{background:var(--p1bg)}tr.row-p2{background:var(--p2bg)}tr.row-p3{background:var(--p3bg)}
+.issue-link{color:var(--p1);text-decoration:none;font-family:monospace;font-size:.85rem}
+.issue-link:hover{text-decoration:underline}
+.checklist{list-style:none;padding:0}
+.checklist li{padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;font-size:.9rem}
+.checklist li:last-child{border-bottom:none}
+.checklist input[type=checkbox]{margin-top:4px;width:16px;height:16px;accent-color:var(--ok)}
+.checklist strong{font-weight:600}
+.nav-tree{font-family:monospace;font-size:.85rem;line-height:1.8;white-space:pre;overflow-x:auto}
+.nav-tree a{color:var(--p1);text-decoration:none}
+.nav-tree a:hover{text-decoration:underline}
+.widget-matrix{overflow-x:auto}
+.widget-matrix table{min-width:800px}
+.widget-matrix td{text-align:center}
+.widget-matrix td:first-child{text-align:left;font-family:monospace;font-weight:600}
+.tick{color:var(--ok);font-weight:700}.cross{color:var(--gray)}
+@media(max-width:768px){header h1{font-size:1.3rem}.dashboard{grid-template-columns:repeat(2,1fr)}.container{padding:12px}}
+.search-box{padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;width:220px}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+<header>
+<div class="container">
+<div>
+<h1>Northwoods Church - Staging Site Audit</h1>
+<p>northwoods.juxt.studio &middot; February 27, 2026 &middot; Pre-Launch Review</p>
+</div>
+<div style="text-align:right">
+<div style="font-size:.8rem;opacity:.7">Issues Found</div>
+<div style="font-size:2rem;font-weight:800">80+</div>
+</div>
+</div>
+</header>
+
+<div class="container">
+
+<!-- Dashboard -->
+<div class="dashboard">
+<div class="stat stat-p0"><div class="num">12</div><div class="label">P0 Critical</div></div>
+<div class="stat stat-p1"><div class="num">19</div><div class="label">P1 High</div></div>
+<div class="stat stat-p2"><div class="num">38</div><div class="label">P2 Medium</div></div>
+<div class="stat stat-p3"><div class="num">14</div><div class="label">P3 Low</div></div>
+<div class="stat stat-ok"><div class="num">150+</div><div class="label">Pages Checked</div></div>
+</div>
+
+<!-- Filters -->
+<div class="filters">
+<label>Filter:</label>
+<button class="active" onclick="filterSeverity('all')">All</button>
+<button onclick="filterSeverity('p0')">P0 Critical</button>
+<button onclick="filterSeverity('p1')">P1 High</button>
+<button onclick="filterSeverity('p2')">P2 Medium</button>
+<button onclick="filterSeverity('p3')">P3 Low</button>
+<input type="text" class="search-box" placeholder="Search issues..." oninput="searchIssues(this.value)">
+</div>
+
+<!-- CRITICAL ERRORS -->
+<div class="section open" data-section="critical">
+<div class="section-header" onclick="toggleSection(this)">
+<h2><span class="badge badge-p0">P0</span> Critical Errors - Fix Before Launch</h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+<table>
+<tr><th>Page</th><th>Issue</th><th>Details</th></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/now-is-the-time/" target="_blank">/now-is-the-time/</a></td><td><strong>Wrong dollar amounts</strong></td><td>"$8,000,00" &rarr; "$8,000,000" and "$15,000,00" &rarr; "$15,000,000"</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/occ/" target="_blank">/occ/</a></td><td><strong>Wrong phone number?</strong></td><td>Craig Smith: "302-243-2740" but all other staff use 309 area code (Peoria, IL)</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><em>SITEWIDE (10+ pages)</em></td><td><strong>JavaScript "thsi" typo</strong></td><td>Event fallback: "no upcoming events at <strong>thsi</strong> time" &mdash; affects <a class="issue-link" href="https://northwoods.juxt.studio/converge/" target="_blank">/converge/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/supportgroups/" target="_blank">/supportgroups/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/getfree/" target="_blank">/getfree/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/foursteps/" target="_blank">/foursteps/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/baptism/" target="_blank">/baptism/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/finances/" target="_blank">/finances/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/leadership/" target="_blank">/leadership/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/55-adults/" target="_blank">/55-adults/</a></td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/about/" target="_blank">/about/</a></td><td><strong>Placeholder text (x13)</strong></td><td>"Your Subtitle Goes Here" in Values and Statement of Faith accordions</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/about/" target="_blank">/about/</a></td><td><strong>Invalid Bible reference</strong></td><td>"1 John 1:14b" doesn't exist (only 10 verses). Likely should be "John 1:14b"</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/faq/" target="_blank">/faq/</a></td><td><strong>Placeholder text (x9)</strong></td><td>"Your Subtitle Goes Here" under FAQ accordion items</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/employment/" target="_blank">/employment/</a></td><td><strong>Placeholder text (x3)</strong></td><td>"Your Subtitle Goes Here" under job listing accordions</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/fasting/" target="_blank">/fasting/</a></td><td><strong>Placeholder text (x4)</strong></td><td>"Your Subtitle Goes Here" under all 4 accordion headings</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/missions/global-partners/" target="_blank">/missions/global-partners/</a></td><td><strong>India has Brazil content</strong></td><td>India North section references "Igreja Presbyteriana de Manaus" and "Amazon River"</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/missions/vietnam-videos/" target="_blank">/missions/vietnam-videos/</a></td><td><strong>Placeholder heading</strong></td><td>"Ministry Partner Name, Vietnam" - needs actual partner name</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/featured-events/valentines-date-night/" target="_blank">/featured-events/valentines-date-night/</a></td><td><strong>Wrong page content</strong></td><td>URL says "Valentine's Date Night" but content is "Receiving the Fullness of the Holy Spirit"</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><em>9 event posts + 6 sermon posts</em></td><td><strong>Placeholder pages</strong></td><td><a class="issue-link" href="https://northwoods.juxt.studio/events/title-here/" target="_blank">/events/title-here/</a> (x9) and <a class="issue-link" href="https://northwoods.juxt.studio/series/sermon-title-here/" target="_blank">/series/sermon-title-here/</a> (x6) with Lorem Ipsum</td></tr>
+</table>
+</div>
+</div>
+
+<!-- SITEWIDE ISSUES -->
+<div class="section" data-section="sitewide">
+<div class="section-header" onclick="toggleSection(this)">
+<h2>Sitewide Issues (Repeated Across Pages)</h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+<div class="page-group">
+<h3>1. JavaScript Event Fallback Bug</h3>
+<p style="margin-bottom:8px">The inline JS on 10+ ministry pages has two bugs in event fallback text:</p>
+<pre style="background:var(--graybg);padding:12px;border-radius:8px;font-size:.8rem;overflow-x:auto;margin-bottom:8px">// Match string has doubled "no":
+"There are no currently no featured events."
+
+// Display text has "thsi" typo:
+"There are no upcoming events at thsi time. Check back soon!"</pre>
+<p><strong>Fix:</strong> Search for "thsi" across all page templates. Also fix "no currently no" &rarr; "currently no".</p>
+</div>
+<div class="page-group">
+<h3>2. Copy-Paste Ministry Reference Errors</h3>
+<table>
+<tr><th>Page</th><th>Current Text</th><th>Should Be</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><a class="issue-link" href="https://northwoods.juxt.studio/youngadults/" target="_blank">/youngadults/</a></td><td>"opportunities with <strong>women's ministry</strong>"</td><td>"...with <strong>20s &amp; 30s ministry</strong>"</td></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><a class="issue-link" href="https://northwoods.juxt.studio/55-adults/" target="_blank">/55-adults/</a></td><td>"opportunities with <strong>women's ministry</strong>"</td><td>"...with <strong>55+ ministry</strong>"</td></tr>
+</table>
+</div>
+<div class="page-group">
+<h3>3. "Your Subtitle Goes Here" Placeholder</h3>
+<p>Divi accordion subtitle fields left with defaults on <a class="issue-link" href="https://northwoods.juxt.studio/faq/" target="_blank">/faq/</a> (9x), <a class="issue-link" href="https://northwoods.juxt.studio/employment/" target="_blank">/employment/</a> (3x), <a class="issue-link" href="https://northwoods.juxt.studio/about/" target="_blank">/about/</a> (13x), <a class="issue-link" href="https://northwoods.juxt.studio/fasting/" target="_blank">/fasting/</a> (4x)</p>
+</div>
+</div>
+</div>
+
+<!-- PAGE-BY-PAGE FINDINGS -->
+<div class="section" data-section="pages">
+<div class="section-header" onclick="toggleSection(this)">
+<h2>Page-by-Page Findings <span style="color:var(--gray);font-weight:400;font-size:.85rem">(40+ pages)</span></h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+
+<div class="page-group">
+<h3>Homepage <a href="https://northwoods.juxt.studio/" target="_blank">/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"walking <strong>along side</strong> you"</td><td>"walking <strong>alongside</strong> you"</td><td>Welcome section</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td>"life's hurts and <strong>hangups</strong>"</td><td>"life's hurts and <strong>hang-ups</strong>"</td><td>Get Involved section</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>About <a href="https://northwoods.juxt.studio/about/" target="_blank">/about/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><span class="badge badge-p0">P0</span></td><td>"Your Subtitle Goes Here" (x13)</td><td>Remove or replace</td><td>Values &amp; Statement of Faith accordions</td></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><span class="badge badge-p0">P0</span></td><td>"1 John 1:14b" - invalid reference</td><td>"<strong>John 1:14b</strong>" (Gospel of John)</td><td>Peace measure - 1 John 1 only has 10 verses</td></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>Duplicate anchor verse "Luke 19:10"</td><td>Use different verse for About God</td><td>Copy-pasted from Evangelistic Heartbeat</td></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>Steps 3 &amp; 4 mismatch with /newhere/</td><td>Determine which ordering is correct</td><td>About: "Discover, Serve" vs New Here: "Serve, Join"</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"three <strong>personalities</strong>"</td><td>"three <strong>persons</strong>" (standard theology)</td><td>Trinity description</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td>"Romans 13<strong>: </strong>13-14"</td><td>"Romans 13<strong>:</strong>13-14" (remove space)</td><td>Freedom measure scripture</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>New Here <a href="https://northwoods.juxt.studio/newhere/" target="_blank">/newhere/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"walking <strong>along side</strong> you"</td><td>"walking <strong>alongside</strong> you"</td><td>Welcome section</td></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>Steps 3 &amp; 4 mismatch with /about/</td><td>See About page</td><td>Cross-page inconsistency</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Give <a href="https://northwoods.juxt.studio/give/" target="_blank">/give/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"operation <strong>or</strong> the church"</td><td>"operation <strong>of</strong> the church"</td><td>General Fund card</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"by giving <strong>by giving</strong> to the General Fund"</td><td>Remove duplicate phrase</td><td>Giving Options</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"as you feel <strong>lead</strong> by God"</td><td>"as you feel <strong>led</strong> by God"</td><td>Intro text</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>FAQ <a href="https://northwoods.juxt.studio/faq/" target="_blank">/faq/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><span class="badge badge-p0">P0</span></td><td>"Your Subtitle Goes Here" (x9)</td><td>Remove or replace</td><td>Accordion subtitle placeholder</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"for each person <strong>you</strong> to take"</td><td>"for each person <strong>to take</strong>"</td><td>Communion section</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Employment <a href="https://northwoods.juxt.studio/employment/" target="_blank">/employment/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><span class="badge badge-p0">P0</span></td><td>"Your Subtitle Goes Here" (x3)</td><td>Remove or replace</td><td>Job listing accordion</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"<strong>on boarding</strong>"</td><td>"<strong>onboarding</strong>"</td><td>Family Ministries position</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"<strong>currents</strong> volunteers"</td><td>"<strong>current</strong> volunteers"</td><td>Volunteer Communication</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"volunteer <strong>celebration</strong>"</td><td>"volunteer <strong>celebrations</strong>"</td><td>Special Events</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Pastoral Care <a href="https://northwoods.juxt.studio/pastoral-care/" target="_blank">/pastoral-care/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"church <strong>oranother</strong> location"</td><td>"church <strong>or another</strong> location"</td><td>Funerals section</td></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"Have you <strong>every</strong> been water baptized?"</td><td>"Have you <strong>ever</strong> been water baptized?"</td><td>Life Help intake form</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Prayer <a href="https://northwoods.juxt.studio/prayer/" target="_blank">/prayer/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"<strong>Employers</strong> name"</td><td>"<strong>Employer's</strong> name"</td><td>Deliverance Intake Form</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"lunch hour...6-8pm"</td><td>6-8pm is evening, not lunch</td><td>Prayer Room - only Fri 12-1pm is lunch</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Young Adults <a href="https://northwoods.juxt.studio/youngadults/" target="_blank">/youngadults/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"opportunities with <strong>women's ministry</strong>"</td><td>"with <strong>20s &amp; 30s ministry</strong>"</td><td>Email signup copy-paste error</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td>"to <strong>hangout</strong>"</td><td>"to <strong>hang out</strong>"</td><td>Verb should be two words</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>55+ Adults <a href="https://northwoods.juxt.studio/55-adults/" target="_blank">/55-adults/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"opportunities with <strong>women's ministry</strong>"</td><td>Reference 55+ ministry</td><td>Email signup copy-paste error</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Women <a href="https://northwoods.juxt.studio/women/" target="_blank">/women/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"<strong>Woman's</strong> Group" (tab title)</td><td>"<strong>Women's</strong> Group"</td><td>Browser tab title</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Global Missions <a href="https://northwoods.juxt.studio/global-missions/" target="_blank">/global-missions/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"described in <strong>book</strong> of Acts"</td><td>"described in <strong>the book</strong> of Acts"</td><td>Parana/Brazil section</td></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"make <strong>in</strong> difference"</td><td>"make <strong>a</strong> difference"</td><td>Jericho/Israel section</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"public health <strong>decision</strong>"</td><td>"public health <strong>decisions</strong>"</td><td>Bienvenida Suero bio</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>POV switch: "trained...<strong>I'm</strong> currently"</td><td>Keep consistent 3rd person</td><td>Sara, West Eurasia bio</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"local Japanese <strong>Christian</strong>."</td><td>"<strong>Christians</strong>" (plural)</td><td>Alissa Bauer bio</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Local Missions <a href="https://northwoods.juxt.studio/localmissions/" target="_blank">/localmissions/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"organization that <strong>focus</strong>"</td><td>"organization that <strong>focuses</strong>"</td><td>Subject-verb agreement</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td>"<strong>Lifewise</strong>" vs "<strong>LifeWise</strong>"</td><td>Standardize to <strong>LifeWise</strong></td><td>Inconsistent capitalization</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Church Planting <a href="https://northwoods.juxt.studio/churchplanting/" target="_blank">/churchplanting/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"explaining <strong>for</strong> vision"</td><td>"explaining <strong>your</strong> vision"</td><td>Application form</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Global Partners <a href="https://northwoods.juxt.studio/missions/global-partners/" target="_blank">/missions/global-partners/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><span class="badge badge-p0">P0</span></td><td>India North = Brazil North content</td><td>Replace with India description</td><td>References "Amazon River" under India</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>Brazil South: redundant description</td><td>Rewrite second sentence</td><td>Restates first sentence</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>DR, Zambia, Vietnam: no descriptions</td><td>Add partner descriptions</td><td>Sections exist but empty</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Global Church Planting <a href="https://northwoods.juxt.studio/global-church-planting/" target="_blank">/global-church-planting/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"for such <strong>as</strong> time as this"</td><td>"for such <strong>a</strong> time as this"</td><td>Esther 4:14 reference</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Bethlehem Partner <a href="https://northwoods.juxt.studio/missions/bethlehem-partner-page/" target="_blank">/missions/bethlehem-partner-page/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"for such <strong>as</strong> time as this"</td><td>"for such <strong>a</strong> time as this"</td><td>Same Esther 4:14 error</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Vietnam Partner <a href="https://northwoods.juxt.studio/missions/vietnam-partner-page/" target="_blank">/missions/vietnam-partner-page/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"partners in <strong>the</strong> Vietnam"</td><td>"partners in Vietnam"</td><td>Remove "the"</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"<strong>Northwood's</strong> mission teams"</td><td>"<strong>Northwoods'</strong> mission teams"</td><td>Church name typo</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>India South Partner <a href="https://northwoods.juxt.studio/missions/india-south-partner-page/" target="_blank">/missions/india-south-partner-page/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"having <strong>training</strong> thousands"</td><td>"having <strong>trained</strong> thousands"</td><td>Wrong verb form</td></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>Name mismatch: "Zion Evangelical" vs "Zion Evangelistic and Care"</td><td>Verify and standardize</td><td>Organization name inconsistency</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>MSP <a href="https://northwoods.juxt.studio/msp/" target="_blank">/msp/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"vocational ministry <strong>of</strong> simply desire"</td><td>"vocational ministry <strong>or</strong> simply desire"</td><td>Wrong word</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"one-time <strong>experience</strong> observing"</td><td>"one-time <strong>experiences</strong>"</td><td>Plural needed</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Event Details <a href="https://northwoods.juxt.studio/event-details/" target="_blank">/event-details/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>CSS class: <code>.event-desription</code></td><td><code>.event-description</code></td><td>Missing "c" breaks min-width rule</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Volunteer <a href="https://northwoods.juxt.studio/volunteer/" target="_blank">/volunteer/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>Broken URL: SERVE &rarr; <code>/localmissions/%20</code></td><td>Remove trailing <code>%20</code></td><td>Will likely 404</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td>"The <strong>four steps</strong> class"</td><td>"The <strong>Four Steps</strong> class"</td><td>Capitalization inconsistency</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Quest <a href="https://northwoods.juxt.studio/quest/" target="_blank">/quest/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"encounter Jesus <strong>though</strong> worship"</td><td>"encounter Jesus <strong>through</strong> worship"</td><td>Missing "r"</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Purity Groups <a href="https://northwoods.juxt.studio/purity-groups/" target="_blank">/purity-groups/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"for <strong>girl</strong> who are becoming young <strong>woman</strong>"</td><td>"for <strong>girls</strong>...young <strong>women</strong>"</td><td>Plural errors</td></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"<strong>they</strong> behind masks"</td><td>"they <strong>hide</strong> behind masks"</td><td>Missing verb</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td>"anger<strong>:</strong> alcohol"</td><td>"anger<strong>;</strong> alcohol"</td><td>Semicolon for consistency</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Yes <a href="https://northwoods.juxt.studio/yes/" target="_blank">/yes/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"you have <strong>to</strong> a new authority"</td><td>"you have <strong>a</strong> new authority"</td><td>Grammatically broken sentence</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Discoveryland <a href="https://northwoods.juxt.studio/discoveryland/" target="_blank">/discoveryland/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"relationship with <strong>the</strong> Him"</td><td>"relationship with Him"</td><td>Erroneous article</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td>Missing period at end of sentence</td><td>Add period</td><td>Check-in section</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Privacy Policy <a href="https://northwoods.juxt.studio/privacy-policy/" target="_blank">/privacy-policy/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"information that <strong>is</strong> collected"</td><td>"information that <strong>are</strong> collected"</td><td>Subject-verb agreement</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"with <strong>regards</strong> to"</td><td>"with <strong>regard</strong> to"</td><td>Standard phrasing</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"ad networks <strong>uses</strong>"</td><td>"ad networks <strong>use</strong>"</td><td>Subject-verb agreement</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"users' <strong>browser</strong>"</td><td>"users' <strong>browsers</strong>"</td><td>Plural needed</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"<strong>do our best efforts</strong>"</td><td>"<strong>make our best efforts</strong>"</td><td>Idiom correction</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Photo Release <a href="https://northwoods.juxt.studio/photo-release/" target="_blank">/photo-release/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"video <strong>and/or or</strong> sound"</td><td>"video <strong>and/or</strong> sound"</td><td>Duplicated "or"</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td>"<strong>web casts</strong>" (x3)</td><td>"<strong>webcasts</strong>"</td><td>Should be one word</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>Book of Prayers (multiple pages) <a href="https://northwoods.juxt.studio/book-of-prayers/" target="_blank">/book-of-prayers/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Page</th></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"I now proclaim that <strong>his</strong> home"</td><td>"that <strong>this</strong> home"</td><td><a class="issue-link" href="https://northwoods.juxt.studio/book-of-prayers/cleansing-dedicating-property/" target="_blank">Cleansing &amp; Dedicating</a></td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"cleanse it <strong>dedicate</strong> it"</td><td>"cleanse it <strong>and dedicate</strong> it"</td><td>Index + Cleansing pages</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"repent <strong>for of</strong> any sins"</td><td>"repent <strong>for</strong> any sins"</td><td><a class="issue-link" href="https://northwoods.juxt.studio/book-of-prayers/breaking-generational-curses/" target="_blank">Breaking Curses</a></td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"<strong>construct-ed</strong>", "<strong>subordi-nate</strong>"</td><td>Remove hyphenation artifacts</td><td><a class="issue-link" href="https://northwoods.juxt.studio/book-of-prayers/spiritual-warfare/" target="_blank">Spiritual Warfare</a></td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"<strong>Hebrew</strong> 7:25"</td><td>"<strong>Hebrews</strong> 7:25"</td><td><a class="issue-link" href="https://northwoods.juxt.studio/book-of-prayers/declarations-of-identity-in-christ/" target="_blank">Declarations</a></td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"In <strong>Jesus</strong> name!" (x2)</td><td>"In <strong>Jesus'</strong> name!"</td><td><a class="issue-link" href="https://northwoods.juxt.studio/book-of-prayers/covering-and-victory/" target="_blank">Covering &amp; Victory</a></td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"as <strong>you</strong> the Holy Spirit leads"</td><td>"as the Holy Spirit leads you"</td><td>Warfare page</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td>"worship <strong>through</strong> the property"</td><td>"worship <strong>throughout</strong>"</td><td>Cleansing page</td></tr>
+</table></div>
+
+<div class="page-group">
+<h3>More Pages with Issues</h3>
+<table><tr><th style="width:60px">Sev</th><th>Page</th><th>Error</th><th>Correction</th></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td><a class="issue-link" href="https://northwoods.juxt.studio/creative-communications/" target="_blank">/creative-communications/</a></td><td>"aptitudes and <strong>interest</strong>"</td><td>"aptitudes and <strong>interests</strong>"</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td><a class="issue-link" href="https://northwoods.juxt.studio/ministries/" target="_blank">/ministries/</a></td><td>"communities <strong>around</strong>"</td><td>"communities <strong>around us</strong>"</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td><a class="issue-link" href="https://northwoods.juxt.studio/missions/zambia-photos/" target="_blank">/missions/zambia-photos/</a></td><td>"<strong>Africa</strong> Church Planting"</td><td>"<strong>African</strong> Church Planting"</td></tr>
+<tr class="row-p2 issue" data-severity="p2"><td><span class="badge badge-p2">P2</span></td><td><a class="issue-link" href="https://northwoods.juxt.studio/missions/brazil-north-stories/" target="_blank">/missions/brazil-north-stories/</a></td><td>"in pain <strong>specially</strong> explaining"</td><td>"in pain <strong>especially</strong>"</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td><a class="issue-link" href="https://northwoods.juxt.studio/missions/india-north-partner-page/" target="_blank">/missions/india-north-partner-page/</a></td><td>"<strong>seven acre</strong> compound"</td><td>"<strong>seven-acre</strong>" (hyphen)</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td><a class="issue-link" href="https://northwoods.juxt.studio/small-groups/" target="_blank">/small-groups/</a></td><td>"Small Christian Group" (tab title)</td><td>"Small Groups"</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td><a class="issue-link" href="https://northwoods.juxt.studio/online-courses/" target="_blank">/online-courses/</a></td><td>"Please <strong>login</strong>"</td><td>"Please <strong>log in</strong>"</td></tr>
+<tr class="row-p3 issue" data-severity="p3"><td><span class="badge badge-p3">P3</span></td><td><a class="issue-link" href="https://northwoods.juxt.studio/milestone-moments/" target="_blank">/milestone-moments/</a></td><td>"Life Help <strong>ministries</strong>"</td><td>"Life Help <strong>Ministries</strong>"</td></tr>
+</table></div>
+
+</div>
+</div>
+
+<!-- PLACEHOLDER CONTENT -->
+<div class="section" data-section="placeholders">
+<div class="section-header" onclick="toggleSection(this)">
+<h2>Placeholder / Template Content to Address</h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+
+<div class="page-group">
+<h3>Event Post Templates (9 pages)</h3>
+<p style="margin-bottom:8px">All contain identical Lorem Ipsum content, "Title Here" headings, "Month X, 2025" dates, "by Juxt Marketing" attribution:</p>
+<table>
+<tr><th>Page</th><th>Action</th></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/events/title-here/" target="_blank">/events/title-here/</a></td><td rowspan="9">Populate with real event content or <strong>unpublish/delete</strong> before launch</td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/events/title-here-2/" target="_blank">/events/title-here-2/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/events/title-here-3/" target="_blank">/events/title-here-3/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/events/title-here-4/" target="_blank">/events/title-here-4/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/events/title-here-5/" target="_blank">/events/title-here-5/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/events/title-here-6/" target="_blank">/events/title-here-6/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/events/title-here-7/" target="_blank">/events/title-here-7/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/events/title-here-8/" target="_blank">/events/title-here-8/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/events/title-here-9/" target="_blank">/events/title-here-9/</a></td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>Sermon Series Templates (6 pages)</h3>
+<table>
+<tr><th>Page</th><th>Action</th></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/series/sermon-title-here/" target="_blank">/series/sermon-title-here/</a></td><td rowspan="6">Populate with real sermon series or <strong>unpublish/delete</strong></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/series/sermon-title-here-2/" target="_blank">/series/sermon-title-here-2/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/series/sermon-title-here-3/" target="_blank">/series/sermon-title-here-3/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/series/sermon-title-here-4/" target="_blank">/series/sermon-title-here-4/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/series/sermon-title-here-5/" target="_blank">/series/sermon-title-here-5/</a></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/series/sermon-title-here-6/" target="_blank">/series/sermon-title-here-6/</a></td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>Featured Event Templates (2 pages)</h3>
+<table>
+<tr><th>Page</th><th>Action</th></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/featured-events/title-here-10/" target="_blank">/featured-events/title-here-10/</a></td><td rowspan="2">Populate or <strong>remove</strong></td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/featured-events/title-here-11/" target="_blank">/featured-events/title-here-11/</a></td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>Valentine's Date Night <a href="https://northwoods.juxt.studio/featured-events/valentines-date-night/" target="_blank">/featured-events/valentines-date-night/</a></h3>
+<table><tr><th style="width:60px">Sev</th><th>Error</th><th>Correction</th><th>Context</th></tr>
+<tr class="row-p0 issue" data-severity="p0"><td><span class="badge badge-p0">P0</span></td><td>URL/content mismatch</td><td>Fix URL or content</td><td>URL says "valentines-date-night" but content is "Receiving the Fullness of the Holy Spirit"</td></tr>
+<tr class="row-p1 issue" data-severity="p1"><td><span class="badge badge-p1">P1</span></td><td>"<strong>:30 PM</strong> - 9:00 PM"</td><td>"<strong>5:30 PM</strong> - 9:00 PM"</td><td>Event time missing hour digit</td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>URL/Content Mismatches</h3>
+<table>
+<tr><th>URL</th><th>Expected</th><th>Actual Content</th></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/featured-events/valentines-date-night/" target="_blank">/featured-events/valentines-date-night/</a></td><td>Valentine's Date Night</td><td>"Receiving the Fullness of the Holy Spirit"</td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/series/sermon-title-here/" target="_blank">/series/sermon-title-here/</a></td><td>Placeholder</td><td>"Spiritual Warfare" prayer content</td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/series/sermon-title-here-2/" target="_blank">/series/sermon-title-here-2/</a></td><td>Placeholder</td><td>"Declarations of Identity in Christ"</td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/series/sermon-title-here-3/" target="_blank">/series/sermon-title-here-3/</a></td><td>Placeholder</td><td>"Prayer for Daily Covering and Victory"</td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>Story Placeholders</h3>
+<p><a class="issue-link" href="https://northwoods.juxt.studio/missions/vietnam-stories/" target="_blank">/missions/vietnam-stories/</a> &mdash; Contains only "Story coming soon"</p>
+</div>
+
+</div>
+</div>
+
+<!-- PRE-LAUNCH CHECKLIST -->
+<div class="section" data-section="checklist">
+<div class="section-header" onclick="toggleSection(this)">
+<h2>Pre-Launch Checklist</h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+
+<h3 style="margin-bottom:12px;color:var(--p0)">Critical - Must Do Before Launch</h3>
+<ul class="checklist">
+<li><input type="checkbox"><div><strong>Remove BugHerd</strong> - QA sidebar loaded on every page with visible API key. Must remove for production.</div></li>
+<li><input type="checkbox"><div><strong>DNS &amp; Domain Migration</strong> - Confirm DNS ready to switch from northwoods.juxt.studio. Lower TTL in advance.</div></li>
+<li><input type="checkbox"><div><strong>SSL Certificate</strong> - Verify production domain has valid SSL that auto-renews.</div></li>
+<li><input type="checkbox"><div><strong>Staging URL References</strong> - Search database/theme for <code>northwoods.juxt.studio</code> references. Check Divi modules, CSS, JS, and <code>&lt;mpp-user-login customcss&gt;</code> attribute.</div></li>
+<li><input type="checkbox"><div><strong>Remove Placeholder Content</strong> - 9 "Title Here" events, 6 "Sermon Title Here" series, 2 featured event placeholders.</div></li>
+<li><input type="checkbox"><div><strong>Fix All P0 Errors</strong> - Dollar amounts, phone number, placeholder text, sitewide JS "thsi" bug.</div></li>
+</ul>
+
+<h3 style="margin:20px 0 12px;color:var(--p1)">SEO &amp; Search</h3>
+<ul class="checklist">
+<li><input type="checkbox"><div><strong>Robots.txt</strong> - Ensure crawling is allowed (staging often blocks with <code>Disallow: /</code>)</div></li>
+<li><input type="checkbox"><div><strong>XML Sitemaps</strong> - Validate and submit to Google Search Console</div></li>
+<li><input type="checkbox"><div><strong>Yoast SEO Meta</strong> - Verify key pages have proper titles/descriptions</div></li>
+<li><input type="checkbox"><div><strong>Open Graph</strong> - Test sharing homepage, give, events on Facebook/Twitter</div></li>
+<li><input type="checkbox"><div><strong>Canonical URLs</strong> - Must point to production domain, not staging</div></li>
+<li><input type="checkbox"><div><strong>Google Analytics</strong> - Confirm GA4 property is correct for production</div></li>
+</ul>
+
+<h3 style="margin:20px 0 12px">Redirects &amp; Links</h3>
+<ul class="checklist">
+<li><input type="checkbox"><div><strong>301 Redirects</strong> - Old URLs redirect to new equivalents</div></li>
+<li><input type="checkbox"><div><strong>Broken Links</strong> - <code>/localmissions/%20</code> on volunteer page already documented</div></li>
+<li><input type="checkbox"><div><strong>External Links</strong> - Test linktr.ee, onlinegiving.org, northwoods.online</div></li>
+<li><input type="checkbox"><div><strong>404 Page</strong> - Custom 404 page exists and is styled</div></li>
+</ul>
+
+<h3 style="margin:20px 0 12px">Forms &amp; Integrations</h3>
+<ul class="checklist">
+<li><input type="checkbox"><div><strong>Gravity Form #19</strong> (<a href="https://northwoods.juxt.studio/give/" target="_blank">/give/</a>) - Test submission and email notification</div></li>
+<li><input type="checkbox"><div><strong>Gravity Form #38</strong> (<a href="https://northwoods.juxt.studio/prayer/" target="_blank">/prayer/</a>) - Test all 12 pages including save-and-continue</div></li>
+<li><input type="checkbox"><div><strong>reCAPTCHA Keys</strong> - Must be registered for production domain</div></li>
+<li><input type="checkbox"><div><strong>MPP User Login</strong> - Test login/logout on production domain</div></li>
+<li><input type="checkbox"><div><strong>BlackPulp Events</strong> (<a href="https://northwoods.juxt.studio/events/" target="_blank">/events/</a>) - Verify events load</div></li>
+<li><input type="checkbox"><div><strong>BlackPulp Sermons</strong> (<a href="https://northwoods.juxt.studio/sermons/" target="_blank">/sermons/</a>) - Verify sermons play</div></li>
+<li><input type="checkbox"><div><strong>Staff Directory</strong> (<a href="https://northwoods.juxt.studio/staff/" target="_blank">/staff/</a>) - Verify all 7+ sections load</div></li>
+<li><input type="checkbox"><div><strong>Online Giving</strong> - Test all CTA buttons reach giving portal</div></li>
+</ul>
+
+<h3 style="margin:20px 0 12px">Performance &amp; Mobile</h3>
+<ul class="checklist">
+<li><input type="checkbox"><div><strong>Mobile Test</strong> - Homepage, events, give on phone + tablet</div></li>
+<li><input type="checkbox"><div><strong>Page Speed</strong> - Run PageSpeed Insights (aim 90+ desktop, 70+ mobile)</div></li>
+<li><input type="checkbox"><div><strong>Welcome Video</strong> (<a href="https://northwoods.juxt.studio/newhere/" target="_blank">/newhere/</a>) - MP4 loads and plays on mobile</div></li>
+</ul>
+
+<h3 style="margin:20px 0 12px">Security</h3>
+<ul class="checklist">
+<li><input type="checkbox"><div><strong>WP Admin</strong> - Change staging passwords, review user accounts</div></li>
+<li><input type="checkbox"><div><strong>Remove Dev Plugins</strong> - BugHerd, debug/log plugins</div></li>
+<li><input type="checkbox"><div><strong>API Keys</strong> - Verify all keys are production (BugHerd key visible in source)</div></li>
+</ul>
+
+<h3 style="margin:20px 0 12px">Content &amp; Branding</h3>
+<ul class="checklist">
+<li><input type="checkbox"><div><strong>Favicon</strong> - Verify it displays in browser tabs</div></li>
+<li><input type="checkbox"><div><strong>Copyright Year</strong> - Footer should show 2026</div></li>
+<li><input type="checkbox"><div><strong>Contact Info</strong> - Verify all phone numbers and addresses</div></li>
+<li><input type="checkbox"><div><strong>Social Links</strong> - Footer/header icons link to correct profiles</div></li>
+</ul>
+
+</div>
+</div>
+
+<!-- WIDGET INTEGRATIONS -->
+<div class="section" data-section="widgets">
+<div class="section-header" onclick="toggleSection(this)">
+<h2>Third-Party Widgets &amp; Integrations</h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+<h3 style="margin-bottom:12px">Widget Matrix by Page</h3>
+<div class="widget-matrix">
+<table>
+<tr><th>Page</th><th>Gravity Forms</th><th>reCAPTCHA</th><th>MPP Login</th><th>MPP Groups</th><th>bpPortal Staff</th><th>bpPortal Events</th><th>Event Finder</th><th>Sermons</th><th>Giving Links</th></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/give/" target="_blank">/give/</a></td><td class="tick">#19</td><td class="tick">&#10003;</td><td class="tick">&#10003;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="tick">&#10003;</td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/events/" target="_blank">/events/</a></td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="tick">&#10003;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/groups/" target="_blank">/groups/</a></td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="tick">&#10003;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/sermons/" target="_blank">/sermons/</a></td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="tick">&#10003;</td><td class="cross">&mdash;</td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/prayer/" target="_blank">/prayer/</a></td><td class="tick">#38 (12pg)</td><td class="tick">&#10003;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="tick">&#10003;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/staff/" target="_blank">/staff/</a></td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="tick">7+ sections</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td></tr>
+<tr><td><a class="issue-link" href="https://northwoods.juxt.studio/watch/" target="_blank">/watch/</a></td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="tick">&#10003;</td><td class="cross">&mdash;</td></tr>
+</table>
+</div>
+
+<h3 style="margin:20px 0 12px">Global Scripts (All Pages)</h3>
+<table>
+<tr><th>Integration</th><th>Source</th><th>Purpose</th></tr>
+<tr><td>Ministry Platform Widgets</td><td><code>my.northwoods.church</code></td><td>Custom web components (login, groups, giving)</td></tr>
+<tr><td>BlackPulp v1 Loader</td><td><code>widgets.blackpulp.com</code></td><td>Staff directories, featured events</td></tr>
+<tr><td>BlackPulp v3 Widgets</td><td><code>widgets3.blackpulp.com</code></td><td>Event finder widget</td></tr>
+<tr><td>MP SSO</td><td><code>northwoods.onlinegiving.org</code></td><td>Single sign-on for giving portal</td></tr>
+<tr style="background:var(--p0bg)"><td><strong>BugHerd (DEV TOOL)</strong></td><td><code>www.bugherd.com</code></td><td><strong>REMOVE BEFORE LAUNCH</strong> - QA sidebar with visible API key</td></tr>
+<tr><td>Juxt Book of Prayers</td><td>First-party WP plugin</td><td>Prayer request functionality</td></tr>
+<tr><td>Site Kit by Google</td><td>v1.173.0</td><td>Analytics &amp; Search Console</td></tr>
+<tr><td>Yoast SEO</td><td>WP plugin</td><td>SEO metadata &amp; structured data</td></tr>
+<tr><td>Divi Theme</td><td>v4.27.5</td><td>Page builder + plugins (Switch, Popups, Accordions, Gravity Forms module)</td></tr>
+</table>
+
+<h3 style="margin:20px 0 12px">Widget Configuration Details</h3>
+
+<div class="page-group">
+<h3>Gravity Forms</h3>
+<table>
+<tr><th>Form</th><th>Page</th><th>Details</th></tr>
+<tr><td><strong>#19</strong></td><td><a class="issue-link" href="https://northwoods.juxt.studio/give/" target="_blank">/give/</a></td><td>Simple contact form &mdash; Name (first/last), Message (textarea), reCAPTCHA</td></tr>
+<tr><td><strong>#38</strong></td><td><a class="issue-link" href="https://northwoods.juxt.studio/prayer/" target="_blank">/prayer/</a></td><td>12-page multi-step counseling intake form with conditional logic and save-and-continue. Fields: personal info, address, emergency contacts (x3), spiritual info, prayer concerns, urgency level</td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>bpPortal Staff Directory (<a href="https://northwoods.juxt.studio/staff/" target="_blank">/staff/</a>)</h3>
+<p style="margin-bottom:8px">Uses <code>flat-group-collections</code> service with 7+ container sections:</p>
+<pre style="background:var(--graybg);padding:12px;border-radius:8px;font-size:.8rem;overflow-x:auto">#StaffSeniorPastor, #StaffExecutives, #StaffExecAdmins,
+#StaffAdults, #StaffMissions, #StaffStudents, #StaffcreativeExperiences</pre>
+</div>
+
+<div class="page-group">
+<h3>BlackPulp Event Finder (<a href="https://northwoods.juxt.studio/events/" target="_blank">/events/</a>)</h3>
+<pre style="background:var(--graybg);padding:12px;border-radius:8px;font-size:.8rem;overflow-x:auto">widgets3.eventFinderW3().then(unifinder =&gt; {
+    unifinder.init('#widget', {
+        coreType: 'events',
+        itemDetailURL: '/event-details/',
+        displayEventDate: true,
+        displayEventTime: true,
+        displayEventLocation: true,
+        futureEventsOnly: true,
+    });
+});</pre>
+</div>
+
+<div class="page-group">
+<h3>bpPortal Featured Events (<a href="https://northwoods.juxt.studio/prayer/" target="_blank">/prayer/</a>)</h3>
+<pre style="background:var(--graybg);padding:12px;border-radius:8px;font-size:.8rem;overflow-x:auto">bpPortal.service.load('featured-events2');
+// programId: [170, 366]</pre>
+</div>
+
+<div class="page-group">
+<h3>BlackPulp Sermon Widget (<a href="https://northwoods.juxt.studio/sermons/" target="_blank">/sermons/</a>, <a href="https://northwoods.juxt.studio/watch/" target="_blank">/watch/</a>)</h3>
+<pre style="background:var(--graybg);padding:12px;border-radius:8px;font-size:.8rem;overflow-x:auto">// Script: sermons.northwoods.apps.blackpulp.com/app/sermonwidget.js
+sermonwidget.sermons().then(function(sermons) {
+    sermons.init('#sermons', { /* config */ });
+});</pre>
+</div>
+
+<div class="page-group">
+<h3>MPP Group Finder (<a href="https://northwoods.juxt.studio/groups/" target="_blank">/groups/</a>)</h3>
+<pre style="background:var(--graybg);padding:12px;border-radius:8px;font-size:.8rem;overflow-x:auto">&lt;mpp-group-finder targeturl="/group-details/"&gt;&lt;/mpp-group-finder&gt;</pre>
+</div>
+
+<div class="page-group">
+<h3>Inline JS Featured Events Widget (multiple ministry pages)</h3>
+<p>Appears on <a class="issue-link" href="https://northwoods.juxt.studio/converge/" target="_blank">/converge/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/supportgroups/" target="_blank">/supportgroups/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/getfree/" target="_blank">/getfree/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/foursteps/" target="_blank">/foursteps/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/baptism/" target="_blank">/baptism/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/finances/" target="_blank">/finances/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/leadership/" target="_blank">/leadership/</a> (4 instances), <a class="issue-link" href="https://northwoods.juxt.studio/55-adults/" target="_blank">/55-adults/</a>. Uses MutationObserver to replace default "no events" message. <strong style="color:var(--p0)">Contains the "thsi" typo bug.</strong></p>
+</div>
+
+<h3 style="margin:20px 0 12px">External Domains Referenced</h3>
+<table>
+<tr><th>Domain</th><th>Service</th><th>Scope</th></tr>
+<tr><td><code>my.northwoods.church</code></td><td>Ministry Platform Widgets</td><td>Global</td></tr>
+<tr><td><code>widgets.blackpulp.com</code></td><td>BlackPulp v1 Loader</td><td>Global</td></tr>
+<tr><td><code>widgets3.blackpulp.com</code></td><td>BlackPulp v3 Widgets</td><td>Global + <a class="issue-link" href="https://northwoods.juxt.studio/events/" target="_blank">/events/</a></td></tr>
+<tr><td><code>sermons.northwoods.apps.blackpulp.com</code></td><td>Sermon Widget</td><td><a class="issue-link" href="https://northwoods.juxt.studio/sermons/" target="_blank">/sermons/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/watch/" target="_blank">/watch/</a></td></tr>
+<tr><td><code>northwoods.onlinegiving.org</code></td><td>Online Giving / SSO</td><td>Global + <a class="issue-link" href="https://northwoods.juxt.studio/give/" target="_blank">/give/</a></td></tr>
+<tr><td><code>www.google.com</code></td><td>reCAPTCHA v2</td><td><a class="issue-link" href="https://northwoods.juxt.studio/give/" target="_blank">/give/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/prayer/" target="_blank">/prayer/</a></td></tr>
+<tr style="background:var(--p0bg)"><td><code>www.bugherd.com</code></td><td>BugHerd QA</td><td>Global (<strong>remove for launch</strong>)</td></tr>
+<tr><td><code>linktr.ee</code></td><td>Northwoods Worship</td><td>External nav link</td></tr>
+</table>
+
+<h3 style="margin:20px 0 12px">Key Widget Findings</h3>
+<ol style="font-size:.9rem;padding-left:20px;line-height:1.8">
+<li><strong>No iframes detected</strong> on any pages audited &mdash; all widgets use JavaScript injection and custom web components</li>
+<li><strong>No YouTube/Vimeo/Subsplash embeds</strong> found &mdash; video is self-hosted MP4 or via BlackPulp sermon widget</li>
+<li><strong>Ministry Platform</strong> is the core ChMS powering authentication, groups, and giving</li>
+<li><strong>BlackPulp</strong> provides three service layers: v1 loader (staff/events), v3 framework (event finder), and dedicated sermon app</li>
+<li><strong>BugHerd is loaded globally with a visible API key</strong> &mdash; must be removed before production launch</li>
+</ol>
+
+</div>
+</div>
+
+<!-- SITE STRUCTURE -->
+<div class="section" data-section="structure">
+<div class="section-header" onclick="toggleSection(this)">
+<h2>Site Structure &amp; Navigation</h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+<h3 style="margin-bottom:12px">Primary Navigation Menu</h3>
+<div class="nav-tree">1. <a href="https://northwoods.juxt.studio/about/" target="_blank">ABOUT</a>
+   ├── <a href="https://northwoods.juxt.studio/leadership/" target="_blank">Leadership</a>
+   ├── <a href="https://northwoods.juxt.studio/staff/" target="_blank">Staff</a>
+   ├── <a href="https://northwoods.juxt.studio/employment/" target="_blank">Employment</a>
+   ├── <a href="https://northwoods.juxt.studio/milestone-moments/" target="_blank">Milestone Moments</a>
+   ├── <a href="https://linktr.ee/northwoodsworship" target="_blank">Northwoods Worship</a> [EXT]
+   ├── <a href="https://northwoods.juxt.studio/alerts/" target="_blank">Alerts &amp; Subscriptions</a>
+   └── <a href="https://northwoods.juxt.studio/translation/" target="_blank">Translations</a>
+
+2. <a href="https://northwoods.juxt.studio/newhere/" target="_blank">NEW HERE</a>
+
+3. <a href="https://northwoods.juxt.studio/ministries/" target="_blank">MINISTRIES &amp; CLASSES</a>
+   ├── Core Classes
+   │   ├── <a href="https://northwoods.juxt.studio/foursteps/" target="_blank">Four Steps</a>
+   │   ├── <a href="https://northwoods.juxt.studio/alpha/" target="_blank">Alpha</a>
+   │   ├── <a href="https://northwoods.juxt.studio/getfree/" target="_blank">Get Free</a>
+   │   ├── <a href="https://northwoods.juxt.studio/dwjd/" target="_blank">Doing What Jesus Did</a>
+   │   └── <a href="https://northwoods.juxt.studio/classes/" target="_blank">More Classes</a>
+   ├── Children &amp; Students
+   │   ├── <a href="https://northwoods.juxt.studio/discoveryland/" target="_blank">Discoveryland</a>
+   │   ├── <a href="https://northwoods.juxt.studio/quest/" target="_blank">Quest</a>
+   │   ├── <a href="https://northwoods.juxt.studio/converge/" target="_blank">Converge</a>
+   │   └── <a href="https://northwoods.juxt.studio/family/" target="_blank">Parenting &amp; Families</a>
+   ├── Freedom &amp; Prayer
+   │   ├── <a href="https://northwoods.juxt.studio/getfree/" target="_blank">Get Free</a>
+   │   ├── <a href="https://northwoods.juxt.studio/prayer/" target="_blank">Prayer</a>
+   │   ├── <a href="https://northwoods.juxt.studio/prayer-resources/" target="_blank">Prayer Resources</a>
+   │   ├── <a href="https://northwoods.juxt.studio/bible/" target="_blank">Bible Reading Resources</a>
+   │   └── <a href="https://northwoods.juxt.studio/fasting/" target="_blank">Fasting Resources</a>
+   ├── Adult Groups
+   │   ├── <a href="https://northwoods.juxt.studio/small-groups/" target="_blank">Small Groups</a>
+   │   ├── <a href="https://northwoods.juxt.studio/men/" target="_blank">Men's Groups</a>
+   │   ├── <a href="https://northwoods.juxt.studio/women/" target="_blank">Women's Groups</a>
+   │   ├── <a href="https://northwoods.juxt.studio/youngadults/" target="_blank">20s &amp; 30s</a>
+   │   └── <a href="https://northwoods.juxt.studio/55-adults/" target="_blank">55+ Connection</a>
+   ├── Life Help
+   │   ├── <a href="https://northwoods.juxt.studio/supportgroups/" target="_blank">Support Groups</a>
+   │   ├── <a href="https://northwoods.juxt.studio/pastoral-care/" target="_blank">Pastoral Care</a>
+   │   ├── <a href="https://northwoods.juxt.studio/marriage/" target="_blank">Marriage</a>
+   │   └── <a href="https://northwoods.juxt.studio/baptism/" target="_blank">Baptism</a>
+   ├── Church Planting &amp; Missions
+   │   ├── <a href="https://northwoods.juxt.studio/churchplanting/" target="_blank">Domestic</a>
+   │   ├── <a href="https://northwoods.juxt.studio/global-church-planting/" target="_blank">Global</a>
+   │   ├── <a href="https://northwoods.juxt.studio/localmissions/" target="_blank">Local Missions</a>
+   │   └── <a href="https://northwoods.juxt.studio/global-missions/" target="_blank">Global Missions</a>
+   ├── <a href="https://northwoods.juxt.studio/finances/" target="_blank">Finances</a>
+   ├── <a href="https://northwoods.juxt.studio/volunteer/" target="_blank">Volunteer</a>
+   └── <a href="https://northwoods.juxt.studio/faq/" target="_blank">FAQ</a>
+
+4. <a href="https://northwoods.juxt.studio/events/" target="_blank">EVENTS</a>
+
+5. CHURCH PLANTING (dropdown)
+   ├── <a href="https://northwoods.juxt.studio/churchplanting/" target="_blank">Domestic</a>
+   └── <a href="https://northwoods.juxt.studio/global-church-planting/" target="_blank">Global</a>
+
+6. WATCH (dropdown)
+   ├── <a href="https://northwoods.online/" target="_blank">Watch Online</a> [EXT]
+   ├── <a href="https://northwoods.juxt.studio/watch/" target="_blank">Message Archive</a>
+   └── <a href="https://northwoods.juxt.studio/mobile/" target="_blank">Streaming</a>
+
+7. GIVE (dropdown)
+   ├── <a href="https://northwoods.juxt.studio/give/" target="_blank">Ways To Give</a>
+   └── <a href="https://northwoods.onlinegiving.org/" target="_blank">Give Online</a> [EXT]
+
+LOGIN WIDGET (separate &lt;mpp-user-login&gt; component):
+   ├── <a href="https://northwoods.juxt.studio/widgets/my-pledges/" target="_blank">My Pledges</a>
+   ├── <a href="https://northwoods.juxt.studio/widgets/contribution-statements/" target="_blank">Contribution Statements</a>
+   └── <a href="https://northwoods.juxt.studio/widgets/my-giving/" target="_blank">My Giving</a></div>
+
+<h3 style="margin:20px 0 12px">Navigation Notes for Developers</h3>
+<ul style="font-size:.9rem;line-height:1.8;padding-left:20px">
+<li><strong>3 nesting levels max</strong> &mdash; deepest items are 3rd-level under Ministries &amp; Classes</li>
+<li><strong>"Church Planting" appears twice</strong> &mdash; as standalone top-level (#5) AND under Ministries &amp; Classes (#3)</li>
+<li><strong>"Get Free" appears twice</strong> &mdash; under both Core Classes and Freedom &amp; Prayer</li>
+<li><strong>Top-level dropdown triggers</strong> &mdash; "Watch", "Give", "Church Planting" have <code>href="#"</code> (not clickable links)</li>
+<li><strong>"New Here" and "Events" are standalone</strong> &mdash; no sub-menus</li>
+</ul>
+
+<h3 style="margin:20px 0 12px">Pages NOT in Navigation (direct link only)</h3>
+
+<h4 style="margin:12px 0 6px;font-size:.85rem;color:var(--gray)">Content Pages</h4>
+<div style="display:flex;flex-wrap:wrap;gap:4px 12px;font-family:monospace;font-size:.8rem;margin-bottom:12px">
+<a class="issue-link" href="https://northwoods.juxt.studio/privacy-policy/" target="_blank">/privacy-policy/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/photo-release/" target="_blank">/photo-release/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/creative-communications/" target="_blank">/creative-communications/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/counseling-referrals/" target="_blank">/counseling-referrals/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/news/" target="_blank">/news/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/blogs/" target="_blank">/blogs/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/weddings/" target="_blank">/weddings/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/puredesire/" target="_blank">/puredesire/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/purity-groups/" target="_blank">/purity-groups/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/msp/" target="_blank">/msp/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/occ/" target="_blank">/occ/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/online-courses/" target="_blank">/online-courses/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/now-is-the-time/" target="_blank">/now-is-the-time/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/yes/" target="_blank">/yes/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/book-of-prayers/" target="_blank">/book-of-prayers/</a> (+ sub-pages)
+<a class="issue-link" href="https://northwoods.juxt.studio/global-missions/" target="_blank">/global-missions/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/global-partners/" target="_blank">/missions/global-partners/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/connect-with-church-planting/" target="_blank">/connect-with-church-planting/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/localmissions-interest-form/" target="_blank">/localmissions-interest-form/</a>
+</div>
+
+<h4 style="margin:12px 0 6px;font-size:.85rem;color:var(--gray)">Mission Partner Pages (all under /missions/)</h4>
+<div style="display:flex;flex-wrap:wrap;gap:4px 12px;font-family:monospace;font-size:.8rem;margin-bottom:12px">
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/brazil-north-partner-page/" target="_blank">/missions/brazil-north-partner-page/</a> + videos, photos, stories
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/brazil-south-partner-page/" target="_blank">/missions/brazil-south-partner-page/</a> + videos, photos
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/dominican-republic-partner-page/" target="_blank">/missions/dominican-republic-partner-page/</a> + dr-videos, dr-photos, dr-stories
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/india-north-partner-page/" target="_blank">/missions/india-north-partner-page/</a> + photos
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/india-south-partner-page/" target="_blank">/missions/india-south-partner-page/</a> + videos, photos, boat-story
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/kfar-saba-partner-page/" target="_blank">/missions/kfar-saba-partner-page/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/jericho-partner-page/" target="_blank">/missions/jericho-partner-page/</a> + videos
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/bethlehem-partner-page/" target="_blank">/missions/bethlehem-partner-page/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/zambia-partner-page/" target="_blank">/missions/zambia-partner-page/</a> + videos, photos
+<a class="issue-link" href="https://northwoods.juxt.studio/missions/vietnam-partner-page/" target="_blank">/missions/vietnam-partner-page/</a> + videos, photos, stories
+</div>
+
+<h4 style="margin:12px 0 6px;font-size:.85rem;color:var(--gray)">Kiosk / Interactive Pages</h4>
+<div style="display:flex;flex-wrap:wrap;gap:4px 12px;font-family:monospace;font-size:.8rem;margin-bottom:12px">
+<a class="issue-link" href="https://northwoods.juxt.studio/smallgroupkiosk/" target="_blank">/smallgroupkiosk/</a> + host-a-group, in-home-group, calendar sub-pages
+</div>
+
+<h4 style="margin:12px 0 6px;font-size:.85rem;color:var(--gray)">Widget / Embed Pages</h4>
+<div style="display:flex;flex-wrap:wrap;gap:4px 12px;font-family:monospace;font-size:.8rem;margin-bottom:12px">
+<a class="issue-link" href="https://northwoods.juxt.studio/widgets/event-detail/" target="_blank">/widgets/event-detail/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/widgets/opportunity-detail/" target="_blank">/widgets/opportunity-detail/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/widgets/opportunity-finder/" target="_blank">/widgets/opportunity-finder/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/widgets/small-groups-finder/" target="_blank">/widgets/small-groups-finder/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/widgets/prayer-form/" target="_blank">/widgets/prayer-form/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/widgets/group-finder/" target="_blank">/widgets/group-finder/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/widgets/my-pledges/" target="_blank">/widgets/my-pledges/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/widgets/contribution-statements/" target="_blank">/widgets/contribution-statements/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/widgets/my-giving/" target="_blank">/widgets/my-giving/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/widgets/custom-form/" target="_blank">/widgets/custom-form/</a>
+</div>
+
+<h4 style="margin:12px 0 6px;font-size:.85rem;color:var(--gray)">Watch Streams, Functional, &amp; Translation Pages</h4>
+<div style="display:flex;flex-wrap:wrap;gap:4px 12px;font-family:monospace;font-size:.8rem;margin-bottom:12px">
+<a class="issue-link" href="https://northwoods.juxt.studio/watch-1/" target="_blank">/watch-1/</a> through /watch-4/
+&middot;
+<a class="issue-link" href="https://northwoods.juxt.studio/signup-slots/" target="_blank">/signup-slots/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/invoices/" target="_blank">/invoices/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/group-details/" target="_blank">/group-details/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/giving-history/" target="_blank">/giving-history/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/staff-widget/" target="_blank">/staff-widget/</a>
+&middot;
+<a class="issue-link" href="https://northwoods.juxt.studio/spanish/" target="_blank">/spanish/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/portuguese/" target="_blank">/portuguese/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/telugu/" target="_blank">/telugu/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/arabic/" target="_blank">/arabic/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/hindi/" target="_blank">/hindi/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/chinese/" target="_blank">/chinese/</a>
+<a class="issue-link" href="https://northwoods.juxt.studio/vietnamese/" target="_blank">/vietnamese/</a>
+</div>
+
+</div>
+</div>
+
+<!-- WIDGET PAGE INVENTORY -->
+<div class="section" data-section="widget-inventory">
+<div class="section-header" onclick="toggleSection(this)">
+<h2>Widget Page Integration Inventory (/widgets/ pages)</h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+<p style="margin-bottom:16px;font-size:.9rem">All <code>/widgets/</code> pages share sitewide scripts (MPWidgets.js, BlackPulp loader/widgets3, MPSSO, BugHerd). Each page uses specific custom HTML elements to render its primary widget, powered by <strong>Ministry Platform (MPP)</strong> or <strong>BlackPulp (bpPortal)</strong>.</p>
+
+<h3 style="margin-bottom:12px">Per-Page Widget Details</h3>
+
+<div class="page-group">
+<h3>1. Event Detail <a href="https://northwoods.juxt.studio/widgets/event-detail/" target="_blank">/widgets/event-detail/</a></h3>
+<table>
+<tr><th style="width:140px">Attribute</th><th>Value</th></tr>
+<tr><td>Primary Widget</td><td>BlackPulp bpPortal Event Detail (rendered dynamically by <code>loader.js</code> + <code>widgets3.js</code>)</td></tr>
+<tr><td>Custom Element</td><td>None in static HTML &mdash; content injected at runtime based on URL query params (<code>?id=...</code>)</td></tr>
+<tr><td>Purpose</td><td>Displays single event details (title, date, description, registration) when linked from event listings</td></tr>
+<tr><td>Custom CSS</td><td><code>.event-meta:after { background: #004c97 }</code> and <code>button.bp-widgets3-button</code> styled with Northwoods navy blue</td></tr>
+<tr><td>Notes</td><td>Main content area is empty Divi text module &mdash; all content is client-side rendered. The CSS class <code>.event-desription</code> (missing "c") is documented in the main audit.</td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>2. Opportunity Finder <a href="https://northwoods.juxt.studio/widgets/opportunity-finder/" target="_blank">/widgets/opportunity-finder/</a></h3>
+<table>
+<tr><th style="width:140px">Attribute</th><th>Value</th></tr>
+<tr><td>Primary Widget</td><td>Ministry Platform Opportunity Finder</td></tr>
+<tr><td>Custom Element</td><td><code>&lt;mpp-opportunity-finder targeturl="/widgets/opportunity-detail/" customcss="...nw-widget-css.css"&gt;</code></td></tr>
+<tr><td>Purpose</td><td>Searchable directory of volunteer/serving opportunities. Clicking navigates to <code>/widgets/opportunity-detail/</code></td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>3. Small Groups Finder <a href="https://northwoods.juxt.studio/widgets/small-groups-finder/" target="_blank">/widgets/small-groups-finder/</a></h3>
+<table>
+<tr><th style="width:140px">Attribute</th><th>Value</th></tr>
+<tr><td>Primary Widget</td><td>Ministry Platform Group Finder (filtered to Small Groups)</td></tr>
+<tr><td>Custom Element</td><td><code>&lt;mpp-group-finder ministryid="8" targeturl=".../widgets/group-finder/" countgroupinquiries="true" showfullgroups="false" showfuturegroups="true"&gt;</code></td></tr>
+<tr><td>Purpose</td><td>Small groups search filtered to Ministry ID 8. Hides full groups, shows future groups. Links to <code>/widgets/group-finder/</code></td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>4. Prayer Form <a href="https://northwoods.juxt.studio/widgets/prayer-form/" target="_blank">/widgets/prayer-form/</a></h3>
+<table>
+<tr><th style="width:140px">Attribute</th><th>Value</th></tr>
+<tr><td>Primary Widget</td><td>Ministry Platform Custom Form</td></tr>
+<tr><td>Custom Element</td><td><code>&lt;mpp-custom-form formguid="249e7a76-6701-42bd-9818-e2479f3eacbb"&gt;</code></td></tr>
+<tr><td>Purpose</td><td>Prayer request submission form from Ministry Platform. GUID ties to specific form config.</td></tr>
+<tr><td>Notes</td><td>Has extra <code>&lt;mpp-user-login&gt;</code> elements in body (not just header) &mdash; users may need to authenticate before submitting</td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>5. Group Finder <a href="https://northwoods.juxt.studio/widgets/group-finder/" target="_blank">/widgets/group-finder/</a></h3>
+<table>
+<tr><th style="width:140px">Attribute</th><th>Value</th></tr>
+<tr><td>Primary Widget</td><td>Ministry Platform Group Finder</td></tr>
+<tr><td>Custom Element</td><td><code>&lt;mpp-group-finder ministryid="8" targeturl=".../group-details/" countgroupinquiries="true"&gt;</code></td></tr>
+<tr><td>Purpose</td><td>General group search. Same Ministry ID 8 filter but <code>targeturl</code> points to <code>/group-details/</code> (non-widget page)</td></tr>
+<tr><td>Notes</td><td>Small-groups-finder links INTO this page; this page links OUT to <code>/group-details/</code></td></tr>
+</table>
+</div>
+
+<div class="page-group">
+<h3>6. My Giving <a href="https://northwoods.juxt.studio/widgets/my-giving/" target="_blank">/widgets/my-giving/</a></h3>
+<table>
+<tr><th style="width:140px">Attribute</th><th>Value</th></tr>
+<tr><td>Primary Widget</td><td>Ministry Platform My Giving Dashboard</td></tr>
+<tr><td>Custom Element</td><td><code>&lt;mpp-my-giving customcss="...nw-widget-css.css"&gt;</code></td></tr>
+<tr><td>Purpose</td><td>Authenticated personal giving dashboard (history, recurring gifts, management). Requires MPP SSO login.</td></tr>
+<tr><td>Giving Portal</td><td>Nav links to <code>https://northwoods.onlinegiving.org/donate/guest_donate?#!/</code></td></tr>
+</table>
+</div>
+
+<h3 style="margin:20px 0 12px">Available MPP Widget Components (from MPWidgets.js)</h3>
+<p style="margin-bottom:8px;font-size:.85rem;color:var(--gray)">37 custom elements available for use on any page that loads the script:</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+<div>
+<h4 style="font-size:.8rem;color:var(--gray);margin-bottom:4px">Authentication &amp; User</h4>
+<pre style="background:var(--graybg);padding:8px;border-radius:6px;font-size:.75rem">&lt;mpp-user-login&gt;
+&lt;mpp-user-label&gt;
+&lt;mpp-user-service&gt;
+&lt;mpp-about-me&gt;
+&lt;mpp-household&gt;
+&lt;mpp-locale-selector&gt;</pre>
+</div>
+<div>
+<h4 style="font-size:.8rem;color:var(--gray);margin-bottom:4px">Events</h4>
+<pre style="background:var(--graybg);padding:8px;border-radius:6px;font-size:.75rem">&lt;mpp-event-finder&gt;
+&lt;mpp-event-details&gt;
+&lt;mpp-event-registration&gt;</pre>
+</div>
+<div>
+<h4 style="font-size:.8rem;color:var(--gray);margin-bottom:4px">Groups</h4>
+<pre style="background:var(--graybg);padding:8px;border-radius:6px;font-size:.75rem">&lt;mpp-group-finder&gt;
+&lt;mpp-group-details&gt;
+&lt;mpp-my-groups&gt;</pre>
+</div>
+<div>
+<h4 style="font-size:.8rem;color:var(--gray);margin-bottom:4px">Giving &amp; Finance</h4>
+<pre style="background:var(--graybg);padding:8px;border-radius:6px;font-size:.75rem">&lt;mpp-my-giving&gt;
+&lt;mpp-my-pledges&gt;
+&lt;mpp-pledge-campaign&gt;
+&lt;mpp-my-contribution-statement&gt;
+&lt;mpp-my-invoices&gt;
+&lt;mpp-pay&gt;
+&lt;mpp-checkout&gt;
+&lt;mpp-checkout-complete&gt;</pre>
+</div>
+<div>
+<h4 style="font-size:.8rem;color:var(--gray);margin-bottom:4px">Serving &amp; Missions</h4>
+<pre style="background:var(--graybg);padding:8px;border-radius:6px;font-size:.75rem">&lt;mpp-opportunity-finder&gt;
+&lt;mpp-opportunity-details&gt;
+&lt;mpp-mission-trip-finder&gt;
+&lt;mpp-mission-trip&gt;
+&lt;mpp-my-mission-trips&gt;</pre>
+</div>
+<div>
+<h4 style="font-size:.8rem;color:var(--gray);margin-bottom:4px">Forms, Content &amp; Config</h4>
+<pre style="background:var(--graybg);padding:8px;border-radius:6px;font-size:.75rem">&lt;mpp-custom-form&gt;
+&lt;mpp-prayer-feedback-form&gt;
+&lt;mpp-plan-your-visit&gt;
+&lt;mpp-smart-frame&gt;
+&lt;mpp-smart-link&gt;
+&lt;mpp-rss-reader&gt;
+&lt;mpp-subscribe-to-publication&gt;
+&lt;mpp-subscriptions&gt;
+&lt;mpp-unsubscribe&gt;
+&lt;mpp-online-directory&gt;
+&lt;mpp-widget-configurator&gt;
+&lt;mpp-widgets&gt;
+&lt;mpp-pre-check&gt;</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- PAGES NOT YET CHECKED -->
+<div class="section" data-section="unchecked">
+<div class="section-header" onclick="toggleSection(this)">
+<h2>Pages Not Yet Checked (Rate Limited)</h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+<p style="margin-bottom:12px;font-size:.9rem">The following pages could not be spell-checked due to API rate limits during the audit. These should be reviewed in a follow-up pass:</p>
+<h3 style="margin-bottom:8px">Main Content Pages</h3>
+<ul style="font-size:.9rem;padding-left:20px;line-height:1.8">
+<li><a class="issue-link" href="https://northwoods.juxt.studio/staff/" target="_blank">/staff/</a> (dynamic content loads via JS &mdash; bios loaded from external service)</li>
+</ul>
+<h3 style="margin:12px 0 8px">Other Pages</h3>
+<ul style="font-size:.9rem;padding-left:20px;line-height:1.8">
+<li><a class="issue-link" href="https://northwoods.juxt.studio/arabic/" target="_blank">/arabic/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/hindi/" target="_blank">/hindi/</a> (language pages)</li>
+<li><a class="issue-link" href="https://northwoods.juxt.studio/invoices/" target="_blank">/invoices/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/group-details/" target="_blank">/group-details/</a> (functional pages)</li>
+<li>All <code>/widgets/</code> sub-pages (widget embed targets &mdash; functional, minimal text)</li>
+</ul>
+</div>
+</div>
+
+<!-- RECOMMENDED FIX ORDER -->
+<div class="section" data-section="fixorder">
+<div class="section-header" onclick="toggleSection(this)">
+<h2>Recommended Fix Order</h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+<ol style="font-size:.9rem;padding-left:20px;line-height:2">
+<li><strong>Fix the sitewide JavaScript "thsi" typo</strong> &mdash; Likely in a single template/code snippet. Fixing once resolves it everywhere.</li>
+<li><strong>Correct the dollar amounts on <a class="issue-link" href="https://northwoods.juxt.studio/now-is-the-time/" target="_blank">/now-is-the-time/</a></strong> &mdash; Campaign page with incorrect financial goals.</li>
+<li><strong>Verify the phone number on <a class="issue-link" href="https://northwoods.juxt.studio/occ/" target="_blank">/occ/</a></strong> &mdash; Craig Smith's area code (302 vs 309).</li>
+<li><strong>Remove placeholder content</strong> &mdash; "Your Subtitle Goes Here" on /faq/ and /employment/. Decide whether to publish or delete the 17+ "Title Here" placeholder posts.</li>
+<li><strong>Fix copy-paste errors</strong> &mdash; Wrong ministry references on /youngadults/ and /55-adults/ email signup sections.</li>
+<li><strong>Address high-priority spelling errors</strong> &mdash; Missing words, wrong words, and errors that change meaning (see P1 items).</li>
+<li><strong>Fix remaining P2 spelling/grammar errors</strong> across all pages.</li>
+<li><strong>Run follow-up audit</strong> on unchecked pages once available.</li>
+</ol>
+</div>
+</div>
+
+</div><!-- /container -->
+
+<footer style="text-align:center;padding:24px;color:var(--gray);font-size:.8rem;border-top:1px solid var(--border);margin-top:24px;background:var(--bg)">
+Northwoods Church Staging Site Audit &middot; Generated February 27, 2026 &middot; <a href="https://northwoods.juxt.studio/" target="_blank" style="color:var(--p1)">northwoods.juxt.studio</a>
+</footer>
+
+<script>
+function toggleSection(header){header.parentElement.classList.toggle('open')}
+function filterSeverity(sev){
+  document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.issue').forEach(row=>{
+    if(sev==='all')row.classList.remove('hidden');
+    else row.classList.toggle('hidden',row.dataset.severity!==sev);
+  });
+}
+function searchIssues(q){
+  q=q.toLowerCase();
+  document.querySelectorAll('.issue').forEach(row=>{
+    row.classList.toggle('hidden',q&&!row.textContent.toLowerCase().includes(q));
+  });
+  if(q)document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+}
+// Open critical section by default
+document.querySelector('[data-section="critical"]').classList.add('open');
+</script>
+</body>
+</html>
