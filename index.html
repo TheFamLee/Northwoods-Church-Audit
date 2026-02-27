@@ -105,6 +105,18 @@ pre{background:var(--graybg);padding:12px;border-radius:6px;border:1px solid var
 </style>
 </head>
 <body>
+<!-- Password Gate -->
+<div id="pw-gate" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--brand-dark) 0%,var(--brand-blue) 100%)">
+<div style="background:#fff;border-radius:12px;padding:40px;max-width:380px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,40,85,.2)">
+<img src="assets/northwoods-horizontal-white.png" alt="Northwoods" style="height:40px;margin-bottom:20px;filter:brightness(0) saturate(100%) invert(19%) sepia(92%) saturate(2033%) hue-rotate(197deg) brightness(88%) contrast(101%)">
+<h2 style="font-size:1.1rem;font-weight:700;margin-bottom:4px;color:var(--brand-black)">Pre-Launch Site Audit</h2>
+<p style="font-size:.85rem;color:var(--tint-black72);margin-bottom:20px">Enter the password to continue</p>
+<input id="pw-input" type="password" placeholder="Password" style="width:100%;padding:10px 14px;border:1px solid var(--tint-black13);border-radius:6px;font-family:inherit;font-size:.9rem;margin-bottom:12px;text-align:center" onkeydown="if(event.key==='Enter')checkPw()">
+<button onclick="checkPw()" style="width:100%;padding:10px;background:var(--brand-blue);color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer">View Audit</button>
+<p id="pw-error" style="color:var(--brand-coral);font-size:.8rem;margin-top:8px;display:none">Incorrect password</p>
+</div>
+</div>
+<div id="pw-content" style="display:none">
 <header>
 <div class="container">
 <div class="header-left">
@@ -1059,7 +1071,27 @@ LOGIN WIDGET (separate &lt;mpp-user-login&gt; component):
 <div style="margin-top:8px;opacity:.5;font-size:.7rem">Inviting broken-world people to experience complete freedom in Christ Jesus.</div>
 </footer>
 
+</div><!-- /pw-content -->
 <script>
+function checkPw(){
+  var p=document.getElementById('pw-input').value;
+  // Simple client-side gate - not meant for true security, just casual access control
+  if(p==='northwoods2026'||p==='hopelives'){
+    document.getElementById('pw-gate').style.display='none';
+    document.getElementById('pw-content').style.display='block';
+    sessionStorage.setItem('nw-audit-auth','1');
+  } else {
+    document.getElementById('pw-error').style.display='block';
+    document.getElementById('pw-input').value='';
+    document.getElementById('pw-input').focus();
+  }
+}
+// Auto-unlock if already authenticated this session
+if(sessionStorage.getItem('nw-audit-auth')==='1'){
+  document.getElementById('pw-gate').style.display='none';
+  document.getElementById('pw-content').style.display='block';
+}
+document.addEventListener('DOMContentLoaded',function(){document.getElementById('pw-input').focus()});
 function toggleSection(header){header.parentElement.classList.toggle('open')}
 function filterSeverity(sev){
   document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
