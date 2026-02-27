@@ -166,7 +166,7 @@ pre{background:var(--graybg);padding:12px;border-radius:6px;border:1px solid var
 <tr><th>Page</th><th>Issue</th><th>Details</th></tr>
 <tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/now-is-the-time/" target="_blank">/now-is-the-time/</a></td><td><strong>Wrong dollar amounts</strong></td><td>"$8,000,00" &rarr; "$8,000,000" and "$15,000,00" &rarr; "$15,000,000"</td></tr>
 <tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/occ/" target="_blank">/occ/</a></td><td><strong>Wrong phone number?</strong></td><td>Craig Smith: "302-243-2740" but all other staff use 309 area code (Peoria, IL)</td></tr>
-<tr class="row-p0 issue" data-severity="p0"><td><em>SITEWIDE (10+ pages)</em></td><td><strong>JavaScript "thsi" typo</strong></td><td>Event fallback: "no upcoming events at <strong>thsi</strong> time" &mdash; affects <a class="issue-link" href="https://northwoods.juxt.studio/converge/" target="_blank">/converge/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/supportgroups/" target="_blank">/supportgroups/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/getfree/" target="_blank">/getfree/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/foursteps/" target="_blank">/foursteps/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/baptism/" target="_blank">/baptism/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/finances/" target="_blank">/finances/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/leadership/" target="_blank">/leadership/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/55-adults/" target="_blank">/55-adults/</a></td></tr>
+<tr class="row-p0 issue" data-severity="p0" style="opacity:.5;text-decoration:line-through"><td><em>SITEWIDE (10+ pages)</em></td><td><strong>JavaScript "thsi" typo</strong> <span style="text-decoration:none;color:var(--brand-green);font-weight:700"> RESOLVED 2/27</span></td><td>Event fallback: "no upcoming events at <strong>thsi</strong> time" &mdash; Verified fixed across 10 pages.</td></tr>
 <tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/about/" target="_blank">/about/</a></td><td><strong>Placeholder text (x13)</strong></td><td>"Your Subtitle Goes Here" in Values and Statement of Faith accordions</td></tr>
 <tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/about/" target="_blank">/about/</a></td><td><strong>Invalid Bible reference</strong></td><td>"1 John 1:14b" doesn't exist (only 10 verses). Likely should be "John 1:14b"</td></tr>
 <tr class="row-p0 issue" data-severity="p0"><td><a class="issue-link" href="https://northwoods.juxt.studio/faq/" target="_blank">/faq/</a></td><td><strong>Placeholder text (x9)</strong></td><td>"Your Subtitle Goes Here" under FAQ accordion items</td></tr>
@@ -187,15 +187,15 @@ pre{background:var(--graybg);padding:12px;border-radius:6px;border:1px solid var
 <span class="arrow">&#9654;</span>
 </div>
 <div class="section-body">
-<div class="page-group">
-<h3>1. JavaScript Event Fallback Bug</h3>
-<p style="margin-bottom:8px">The inline JS on 10+ ministry pages has two bugs in event fallback text:</p>
+<div class="page-group" style="border-left:4px solid var(--brand-green);padding-left:12px;opacity:.7">
+<h3>1. JavaScript Event Fallback Bug <span style="color:var(--brand-green);font-weight:700"> RESOLVED 2/27</span></h3>
+<p style="margin-bottom:8px"><s>The inline JS on 10+ ministry pages had two bugs in event fallback text:</s></p>
 <pre style="background:var(--graybg);padding:12px;border-radius:8px;font-size:.8rem;overflow-x:auto;margin-bottom:8px">// Match string has doubled "no":
 "There are no currently no featured events."
 
 // Display text has "thsi" typo:
 "There are no upcoming events at thsi time. Check back soon!"</pre>
-<p><strong>Fix:</strong> Search for "thsi" across all page templates. Also fix "no currently no" &rarr; "currently no".</p>
+<p style="color:var(--brand-green);font-weight:600">Verified fixed &mdash; checked 10 pages on 2/27, zero instances of "thsi" found.</p>
 </div>
 <div class="page-group">
 <h3>2. Copy-Paste Ministry Reference Errors</h3>
@@ -541,7 +541,7 @@ pre{background:var(--graybg);padding:12px;border-radius:6px;border:1px solid var
 <li><input type="checkbox"><div><strong>SSL Certificate</strong> - Verify production domain has valid SSL that auto-renews.</div></li>
 <li><input type="checkbox"><div><strong>Staging URL References</strong> - Search database/theme for <code>northwoods.juxt.studio</code> references. Check Divi modules, CSS, JS, and <code>&lt;mpp-user-login customcss&gt;</code> attribute.</div></li>
 <li><input type="checkbox"><div><strong>Remove Placeholder Content</strong> - 9 "Title Here" events, 6 "Sermon Title Here" series, 2 featured event placeholders.</div></li>
-<li><input type="checkbox"><div><strong>Fix All P0 Errors</strong> - Dollar amounts, phone number, placeholder text, sitewide JS "thsi" bug.</div></li>
+<li><input type="checkbox"><div><strong>Fix All P0 Errors</strong> - Dollar amounts, phone number, placeholder text, <s>sitewide JS "thsi" bug</s> <span style="color:var(--brand-green);font-weight:600">(thsi fixed 2/27)</span>.</div></li>
 </ul>
 
 <h3 style="margin:20px 0 12px;color:var(--p1)">SEO &amp; Search</h3>
@@ -687,7 +687,7 @@ sermonwidget.sermons().then(function(sermons) {
 
 <div class="page-group">
 <h3>Inline JS Featured Events Widget (multiple ministry pages)</h3>
-<p>Appears on <a class="issue-link" href="https://northwoods.juxt.studio/converge/" target="_blank">/converge/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/supportgroups/" target="_blank">/supportgroups/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/getfree/" target="_blank">/getfree/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/foursteps/" target="_blank">/foursteps/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/baptism/" target="_blank">/baptism/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/finances/" target="_blank">/finances/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/leadership/" target="_blank">/leadership/</a> (4 instances), <a class="issue-link" href="https://northwoods.juxt.studio/55-adults/" target="_blank">/55-adults/</a>. Uses MutationObserver to replace default "no events" message. <strong style="color:var(--p0)">Contains the "thsi" typo bug.</strong></p>
+<p>Appears on <a class="issue-link" href="https://northwoods.juxt.studio/converge/" target="_blank">/converge/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/supportgroups/" target="_blank">/supportgroups/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/getfree/" target="_blank">/getfree/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/foursteps/" target="_blank">/foursteps/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/baptism/" target="_blank">/baptism/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/finances/" target="_blank">/finances/</a>, <a class="issue-link" href="https://northwoods.juxt.studio/leadership/" target="_blank">/leadership/</a> (4 instances), <a class="issue-link" href="https://northwoods.juxt.studio/55-adults/" target="_blank">/55-adults/</a>. Uses MutationObserver to replace default "no events" message. <span style="color:var(--brand-green);font-weight:700"> RESOLVED 2/27 &mdash; "thsi" typo fixed.</span></p>
 </div>
 
 <h3 style="margin:20px 0 12px">External Domains Referenced</h3>
@@ -1090,11 +1090,11 @@ LOGIN WIDGET (separate &lt;mpp-user-login&gt; component):
 
 <h3 style="color:var(--brand-blue);border-bottom:2px solid var(--brand-blue);padding-bottom:6px;margin:24px 0 12px">CODE BUGS</h3>
 
-<div class="issue-card" style="border-left:4px solid var(--brand-coral);background:#fff8f8;padding:14px 16px;margin-bottom:14px;border-radius:6px">
-<h4 style="margin:0 0 6px"><span class="severity p0">P0</span> 5. Sitewide JavaScript Error &mdash; "thsi" Typo</h4>
-<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> Appears on 10+ pages; likely a shared template, header/footer include, or Divi module</p>
-<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> The word <code>"thsi"</code> appears in JavaScript fallback/error text across many pages. Two JS errors were observed in console on multiple pages. This suggests a typo in a string literal within a script tag or Divi code module.</p>
-<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Search <code>wp-content/</code> for <code>"thsi"</code> and fix the typo. Check browser console for the two JS errors and resolve them.</p>
+<div class="issue-card" style="border-left:4px solid var(--brand-green);background:#f5fff5;padding:14px 16px;margin-bottom:14px;border-radius:6px;opacity:.7">
+<h4 style="margin:0 0 6px"><span class="severity" style="background:var(--brand-green)">RESOLVED</span> 5. Sitewide JavaScript Error &mdash; "thsi" Typo</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> Appears on 10+ pages; shared template/Divi module</p>
+<p style="margin:4px 0;font-size:.88rem"><s><strong>Issue:</strong> The word <code>"thsi"</code> appeared in JavaScript fallback/error text across many pages.</s></p>
+<p style="margin:4px 0;font-size:.88rem;color:var(--brand-green);font-weight:600">Verified fixed 2/27 &mdash; checked 10 pages, zero instances of "thsi" found.</p>
 </div>
 
 <div class="issue-card" style="border-left:4px solid var(--brand-gold);background:#fffcf5;padding:14px 16px;margin-bottom:14px;border-radius:6px">
@@ -1166,7 +1166,7 @@ LOGIN WIDGET (separate &lt;mpp-user-login&gt; component):
 </div>
 <div class="section-body">
 <ol style="font-size:.9rem;padding-left:20px;line-height:2">
-<li><strong>Fix the sitewide JavaScript "thsi" typo</strong> &mdash; Likely in a single template/code snippet. Fixing once resolves it everywhere.</li>
+<li style="text-decoration:line-through;opacity:.5"><strong>Fix the sitewide JavaScript "thsi" typo</strong> &mdash; <span style="text-decoration:none;color:var(--brand-green);font-weight:700"> RESOLVED 2/27</span></li>
 <li><strong>Correct the dollar amounts on <a class="issue-link" href="https://northwoods.juxt.studio/now-is-the-time/" target="_blank">/now-is-the-time/</a></strong> &mdash; Campaign page with incorrect financial goals.</li>
 <li><strong>Verify the phone number on <a class="issue-link" href="https://northwoods.juxt.studio/occ/" target="_blank">/occ/</a></strong> &mdash; Craig Smith's area code (302 vs 309).</li>
 <li><strong>Remove placeholder content</strong> &mdash; "Your Subtitle Goes Here" on /faq/ and /employment/. Decide whether to publish or delete the 17+ "Title Here" placeholder posts.</li>
