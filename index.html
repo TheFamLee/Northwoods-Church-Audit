@@ -4,75 +4,119 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Northwoods Church - Pre-Launch Site Audit</title>
+<link rel="icon" href="assets/northwoods symbol-white.png" type="image/png">
 <style>
-:root{--p0:#dc2626;--p0bg:#fef2f2;--p1:#ea580c;--p1bg:#fff7ed;--p2:#ca8a04;--p2bg:#fefce8;--p3:#2563eb;--p3bg:#eff6ff;--ok:#16a34a;--okbg:#f0fdf4;--gray:#64748b;--graybg:#f8fafc;--border:#e2e8f0;--bg:#fff;--text:#1e293b}
+/* Northwoods Brand Fonts */
+@font-face{font-family:'Myriad Pro';src:url('assets/fonts/MyriadPro-Light.otf') format('opentype');font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:'Myriad Pro';src:url('assets/fonts/MyriadPro-Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Myriad Pro';src:url('assets/fonts/MyriadPro-Semibold.otf') format('opentype');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Myriad Pro';src:url('assets/fonts/MyriadPro-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Myriad Pro';src:url('assets/fonts/MyriadPro-Black.otf') format('opentype');font-weight:900;font-style:normal;font-display:swap}
+
+/* Brand Color System
+   Primary Blue:  #004C97 (Pantone 2945)
+   Primary Black: #2D2926
+   Dark Blue:     #002855 (Pantone 295)
+   Light Blue:    #009CDE (Pantone 292)
+   Gold:          #F1BE48 (Pantone 142)
+   Green:         #86AD3F (Pantone 4212)
+   Coral:         #FF6D6A (Pantone 2345)
+   Tints: Black 72% #636060, 38% #ABA9A8, 13% #DEDDDC
+   Tints: Blue 72% #4DB4E5, 38% #99D2EF, 18% #CEEAF8
+*/
+:root{
+  --brand-blue:#004C97;--brand-dark:#002855;--brand-black:#2D2926;
+  --brand-light-blue:#009CDE;--brand-gold:#F1BE48;--brand-green:#86AD3F;--brand-coral:#FF6D6A;
+  --tint-black72:#636060;--tint-black38:#ABA9A8;--tint-black13:#DEDDDC;
+  --tint-blue72:#4DB4E5;--tint-blue38:#99D2EF;--tint-blue18:#CEEAF8;
+  --p0:var(--brand-coral);--p0bg:#FFF0EF;
+  --p1:var(--brand-gold);--p1bg:#FDF8EC;
+  --p2:var(--brand-light-blue);--p2bg:#EDF8FE;
+  --p3:var(--brand-green);--p3bg:#F2F8EB;
+  --ok:var(--brand-green);--okbg:#F2F8EB;
+  --gray:var(--tint-black72);--graybg:#F5F5F4;
+  --border:var(--tint-black13);--bg:#fff;--text:var(--brand-black)
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--text);background:#f1f5f9;line-height:1.6}
+body{font-family:'Myriad Pro',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--text);background:#F5F5F4;line-height:1.6;font-weight:300}
+strong,b{font-weight:700}
 .container{max-width:1200px;margin:0 auto;padding:16px}
-header{background:linear-gradient(135deg,#1e293b 0%,#334155 100%);color:#fff;padding:32px 0;margin-bottom:24px}
-header .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
-header h1{font-size:1.75rem;font-weight:700}
-header p{opacity:.8;font-size:.9rem}
-.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.75rem;font-weight:600;color:#fff}
-.badge-p0{background:var(--p0)}.badge-p1{background:var(--p1)}.badge-p2{background:var(--p2)}.badge-p3{background:var(--p3)}
+header{background:linear-gradient(135deg,var(--brand-dark) 0%,var(--brand-blue) 100%);color:#fff;padding:0;margin-bottom:24px}
+header .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;padding-top:20px;padding-bottom:20px}
+.header-left{display:flex;align-items:center;gap:20px}
+.header-logo{height:48px;width:auto}
+.header-text h1{font-size:1.5rem;font-weight:300;letter-spacing:.02em}
+.header-text p{opacity:.75;font-size:.85rem;font-weight:300}
+.header-stats{text-align:right}
+.header-stats .num{font-size:2.2rem;font-weight:900;line-height:1}
+.header-stats .label{font-size:.75rem;opacity:.7;text-transform:uppercase;letter-spacing:.08em;font-weight:400}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.75rem;font-weight:700;color:#fff}
+.badge-p0{background:var(--p0)}.badge-p1{background:#D4A030}.badge-p2{background:var(--p2)}.badge-p3{background:var(--p3)}
 .dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
-.stat{background:var(--bg);border-radius:12px;padding:20px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.stat .num{font-size:2rem;font-weight:800;line-height:1.2}
-.stat .label{font-size:.8rem;color:var(--gray);text-transform:uppercase;letter-spacing:.05em}
-.stat-p0 .num{color:var(--p0)}.stat-p1 .num{color:var(--p1)}.stat-p2 .num{color:var(--p2)}.stat-p3 .num{color:var(--p3)}.stat-ok .num{color:var(--ok)}
-.filters{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.filters label{font-size:.85rem;font-weight:600;margin-right:4px}
-.filters button{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:.8rem;font-weight:500;transition:all .15s}
-.filters button:hover{border-color:#94a3b8}
-.filters button.active{background:var(--text);color:#fff;border-color:var(--text)}
-.section{background:var(--bg);border-radius:12px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.stat{background:var(--bg);border-radius:8px;padding:20px;text-align:center;box-shadow:0 1px 3px rgba(0,40,85,.06);border:1px solid var(--border)}
+.stat .num{font-size:2rem;font-weight:900;line-height:1.2}
+.stat .label{font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.stat-p0 .num{color:var(--p0)}.stat-p1 .num{color:#D4A030}.stat-p2 .num{color:var(--brand-blue)}.stat-p3 .num{color:var(--p3)}.stat-ok .num{color:var(--brand-blue)}
+.filters{background:var(--bg);border-radius:8px;padding:16px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,40,85,.06);border:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters label{font-size:.85rem;font-weight:700;margin-right:4px}
+.filters button{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:.8rem;font-weight:600;font-family:inherit;transition:all .15s;color:var(--text)}
+.filters button:hover{border-color:var(--brand-blue);color:var(--brand-blue)}
+.filters button.active{background:var(--brand-blue);color:#fff;border-color:var(--brand-blue)}
+.section{background:var(--bg);border-radius:8px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,40,85,.06);border:1px solid var(--border);overflow:hidden}
 .section-header{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid transparent;transition:background .15s;user-select:none}
 .section-header:hover{background:var(--graybg)}
-.section-header h2{font-size:1rem;font-weight:600;display:flex;align-items:center;gap:8px}
-.section-header .arrow{transition:transform .2s;font-size:.75rem;color:var(--gray)}
+.section-header h2{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.section-header .arrow{transition:transform .2s;font-size:.75rem;color:var(--tint-black38)}
 .section.open .section-header{border-bottom-color:var(--border)}
 .section.open .arrow{transform:rotate(90deg)}
 .section-body{display:none;padding:16px 20px}
 .section.open .section-body{display:block}
 .page-group{margin-bottom:20px}
-.page-group h3{font-size:.95rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.page-group h3 a{color:var(--p1);text-decoration:none;font-family:monospace;font-size:.85rem}
-.page-group h3 a:hover{text-decoration:underline}
+.page-group h3{font-size:.95rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.page-group h3 a{color:var(--brand-blue);text-decoration:none;font-family:'Myriad Pro',monospace;font-size:.85rem;font-weight:600}
+.page-group h3 a:hover{text-decoration:underline;color:var(--brand-light-blue)}
 table{width:100%;border-collapse:collapse;font-size:.85rem;margin-bottom:12px}
-th{text-align:left;padding:8px 10px;background:var(--graybg);border-bottom:2px solid var(--border);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;color:var(--gray)}
+th{text-align:left;padding:8px 10px;background:var(--graybg);border-bottom:2px solid var(--border);font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--tint-black72)}
 td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
 tr:last-child td{border-bottom:none}
 tr.row-p0{background:var(--p0bg)}tr.row-p1{background:var(--p1bg)}tr.row-p2{background:var(--p2bg)}tr.row-p3{background:var(--p3bg)}
-.issue-link{color:var(--p1);text-decoration:none;font-family:monospace;font-size:.85rem}
-.issue-link:hover{text-decoration:underline}
+.issue-link{color:var(--brand-blue);text-decoration:none;font-family:'Myriad Pro',monospace;font-size:.85rem;font-weight:600}
+.issue-link:hover{text-decoration:underline;color:var(--brand-light-blue)}
+a{color:var(--brand-blue)}a:hover{color:var(--brand-light-blue)}
 .checklist{list-style:none;padding:0}
 .checklist li{padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;font-size:.9rem}
 .checklist li:last-child{border-bottom:none}
-.checklist input[type=checkbox]{margin-top:4px;width:16px;height:16px;accent-color:var(--ok)}
-.checklist strong{font-weight:600}
-.nav-tree{font-family:monospace;font-size:.85rem;line-height:1.8;white-space:pre;overflow-x:auto}
-.nav-tree a{color:var(--p1);text-decoration:none}
-.nav-tree a:hover{text-decoration:underline}
+.checklist input[type=checkbox]{margin-top:4px;width:16px;height:16px;accent-color:var(--brand-blue)}
+.checklist strong{font-weight:700}
+.nav-tree{font-family:'Myriad Pro',monospace;font-size:.85rem;line-height:1.8;white-space:pre;overflow-x:auto}
+.nav-tree a{color:var(--brand-blue);text-decoration:none}
+.nav-tree a:hover{text-decoration:underline;color:var(--brand-light-blue)}
 .widget-matrix{overflow-x:auto}
 .widget-matrix table{min-width:800px}
 .widget-matrix td{text-align:center}
-.widget-matrix td:first-child{text-align:left;font-family:monospace;font-weight:600}
-.tick{color:var(--ok);font-weight:700}.cross{color:var(--gray)}
-@media(max-width:768px){header h1{font-size:1.3rem}.dashboard{grid-template-columns:repeat(2,1fr)}.container{padding:12px}}
-.search-box{padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;width:220px}
+.widget-matrix td:first-child{text-align:left;font-family:'Myriad Pro',monospace;font-weight:700}
+.tick{color:var(--brand-blue);font-weight:900}.cross{color:var(--tint-black38)}
+pre,code{font-family:SFMono-Regular,Menlo,monospace;font-size:.8rem}
+pre{background:var(--graybg);padding:12px;border-radius:6px;border:1px solid var(--border)}
+@media(max-width:768px){.header-text h1{font-size:1.1rem}.header-logo{height:36px}.dashboard{grid-template-columns:repeat(2,1fr)}.container{padding:12px}}
+.search-box{padding:8px 14px;border:1px solid var(--border);border-radius:6px;font-size:.85rem;width:220px;font-family:inherit}
+.search-box:focus{outline:none;border-color:var(--brand-blue);box-shadow:0 0 0 3px rgba(0,76,151,.12)}
 .hidden{display:none !important}
 </style>
 </head>
 <body>
 <header>
 <div class="container">
-<div>
-<h1>Northwoods Church - Staging Site Audit</h1>
-<p>northwoods.juxt.studio &middot; February 27, 2026 &middot; Pre-Launch Review</p>
+<div class="header-left">
+<img src="assets/northwoods-horizontal-white.png" alt="Northwoods Community Church" class="header-logo">
+<div class="header-text">
+<h1>Pre-Launch Site Audit</h1>
+<p>northwoods.juxt.studio &middot; February 27, 2026</p>
 </div>
-<div style="text-align:right">
-<div style="font-size:.8rem;opacity:.7">Issues Found</div>
-<div style="font-size:2rem;font-weight:800">80+</div>
+</div>
+<div class="header-stats">
+<div class="num">80+</div>
+<div class="label">Issues Found</div>
 </div>
 </div>
 </header>
@@ -1008,8 +1052,11 @@ LOGIN WIDGET (separate &lt;mpp-user-login&gt; component):
 
 </div><!-- /container -->
 
-<footer style="text-align:center;padding:24px;color:var(--gray);font-size:.8rem;border-top:1px solid var(--border);margin-top:24px;background:var(--bg)">
-Northwoods Church Staging Site Audit &middot; Generated February 27, 2026 &middot; <a href="https://northwoods.juxt.studio/" target="_blank" style="color:var(--p1)">northwoods.juxt.studio</a>
+<footer style="text-align:center;padding:32px 16px;color:#fff;font-size:.8rem;margin-top:24px;background:linear-gradient(135deg,var(--brand-dark) 0%,var(--brand-blue) 100%)">
+<img src="assets/northwoods symbol-white.png" alt="" style="height:32px;margin-bottom:8px;opacity:.6"><br>
+<span style="font-weight:600">Northwoods Community Church</span> &middot; Pre-Launch Site Audit &middot; February 27, 2026<br>
+<a href="https://northwoods.juxt.studio/" target="_blank" style="color:var(--tint-blue38)">northwoods.juxt.studio</a>
+<div style="margin-top:8px;opacity:.5;font-size:.7rem">Inviting broken-world people to experience complete freedom in Christ Jesus.</div>
 </footer>
 
 <script>
