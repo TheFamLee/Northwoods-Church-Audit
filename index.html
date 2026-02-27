@@ -1042,6 +1042,122 @@ LOGIN WIDGET (separate &lt;mpp-user-login&gt; component):
 </div>
 </div>
 
+<!-- DEVELOPER TECHNICAL ISSUES -->
+<div class="section" data-section="dev-issues" id="developer-technical-issues">
+<div class="section-header" onclick="toggleSection(this)">
+<h2>Developer Technical Issues</h2>
+<span class="arrow">&#9654;</span>
+</div>
+<div class="section-body">
+<p style="margin-bottom:16px;font-size:.95rem">These are <strong>developer-specific technical items</strong> separate from spelling/content issues. These require code changes, configuration updates, or infrastructure actions before the site goes live.</p>
+
+<h3 style="color:var(--brand-coral);border-bottom:2px solid var(--brand-coral);padding-bottom:6px;margin:20px 0 12px">SECURITY</h3>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-coral);background:#fff8f8;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p0">P0</span> 1. BugHerd API Key Exposed on Every Page</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> Sitewide <code>&lt;script&gt;</code> tag loaded on every page</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> BugHerd QA sidebar is loaded on <strong>all pages</strong> with a visible API key (<code>e80shryijifxwxc5azhxbq</code>). This is a development/staging tool that must not ship to production.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Remove the BugHerd <code>&lt;script&gt;</code> tag entirely before DNS cutover, or conditionally load only on staging.</p>
+</div>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-coral);background:#fff8f8;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p0">P0</span> 2. Hardcoded Staging Domain in Widget Attributes</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> Multiple page templates containing <code>&lt;mpp-*&gt;</code> and BlackPulp widget embed code</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> At least 6 pages have widget attributes pointing to <code>northwoods.juxt.studio</code> (the staging domain):</p>
+<ul style="font-size:.85rem;margin:6px 0 6px 16px;line-height:1.7">
+<li><code>&lt;mpp-group-finder&gt;</code> &rarr; <code>redirecturl="https://northwoods.juxt.studio/widgets/group-detail/"</code></li>
+<li><code>&lt;mpp-event-finder&gt;</code> &rarr; <code>redirecturl="https://northwoods.juxt.studio/widgets/event-detail/"</code></li>
+<li><code>&lt;mpp-opportunity-finder&gt;</code> &rarr; <code>redirecturl="https://northwoods.juxt.studio/widgets/opportunity-detail/"</code></li>
+<li>BlackPulp event widgets &rarr; <code>detailurl="https://northwoods.juxt.studio/widgets/event-detail/"</code></li>
+<li>Custom CSS references &rarr; <code>customcss="https://northwoods.juxt.studio/wp-content/uploads/nw-widget-css.css"</code></li>
+</ul>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Find-and-replace all instances of <code>northwoods.juxt.studio</code> with the production domain in widget attributes, custom CSS URLs, and redirect URLs.</p>
+</div>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-gold);background:#fffcf5;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p1">P1</span> 3. reCAPTCHA Keys Domain-Locked</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> Gravity Forms reCAPTCHA integration (Forms #19, #38)</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> Google reCAPTCHA v2 site keys are domain-bound. Keys registered for <code>northwoods.juxt.studio</code> will <strong>fail silently</strong> on the production domain, causing form submissions on <a class="issue-link" href="https://northwoods.juxt.studio/give/" target="_blank">/give/</a> and <a class="issue-link" href="https://northwoods.juxt.studio/prayer/" target="_blank">/prayer/</a> to break.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Register the production domain in Google reCAPTCHA admin console and update the site key in Gravity Forms settings.</p>
+</div>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-gold);background:#fffcf5;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p1">P1</span> 4. Ministry Platform SSO Domain Binding</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> <code>northwoods.onlinegiving.org/assets/mpsso.js</code> and MP platform configuration</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> The SSO bridge script from <code>northwoods.onlinegiving.org</code> likely has domain whitelisting. If the staging domain is whitelisted but the production domain is not, the <code>&lt;mpp-user-login&gt;</code> component will fail on production, breaking all authenticated features (giving dashboard, groups, account management).</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Confirm that the production domain is whitelisted in both the Ministry Platform configuration and the online giving portal SSO settings.</p>
+</div>
+
+<h3 style="color:var(--brand-blue);border-bottom:2px solid var(--brand-blue);padding-bottom:6px;margin:24px 0 12px">CODE BUGS</h3>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-coral);background:#fff8f8;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p0">P0</span> 5. Sitewide JavaScript Error &mdash; "thsi" Typo</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> Appears on 10+ pages; likely a shared template, header/footer include, or Divi module</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> The word <code>"thsi"</code> appears in JavaScript fallback/error text across many pages. Two JS errors were observed in console on multiple pages. This suggests a typo in a string literal within a script tag or Divi code module.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Search <code>wp-content/</code> for <code>"thsi"</code> and fix the typo. Check browser console for the two JS errors and resolve them.</p>
+</div>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-gold);background:#fffcf5;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p1">P1</span> 6. CSS Class Typo Breaking Layout on <a class="issue-link" href="https://northwoods.juxt.studio/widgets/event-detail/" target="_blank">/widgets/event-detail/</a></h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> Event detail page template or Divi module</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> A CSS class name is misspelled, causing a styling rule not to apply. The result is a layout break on event detail pages.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Inspect the event detail page, find the misspelled class in the HTML, and correct it to match the intended CSS rule.</p>
+</div>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-gold);background:#fffcf5;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p1">P1</span> 7. Broken URL with Encoded Space on <a class="issue-link" href="https://northwoods.juxt.studio/volunteer/" target="_blank">/volunteer/</a></h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> SERVE button on <code>/volunteer/</code> page</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> A link URL contains a trailing <code>%20</code> (encoded space character), which will cause a 404 or unexpected redirect when clicked.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Edit the SERVE button link in the Divi builder and remove the trailing space.</p>
+</div>
+
+<h3 style="color:var(--brand-dark);border-bottom:2px solid var(--brand-dark);padding-bottom:6px;margin:24px 0 12px">INFRASTRUCTURE</h3>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-coral);background:#fff8f8;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p0">P0</span> 8. robots.txt Likely Blocking Crawlers</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> <code>/robots.txt</code> at site root</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> Staging sites typically have <code>Disallow: /</code> in <code>robots.txt</code> to prevent search engine indexing. If this is not updated before launch, Google will not index the production site.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Verify <code>robots.txt</code> contents. Replace staging disallow rules with appropriate production rules allowing crawling. Submit the updated sitemap to Google Search Console.</p>
+</div>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-coral);background:#fff8f8;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p0">P0</span> 9. Canonical URLs Pointing to Staging Domain</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> <code>&lt;link rel="canonical"&gt;</code> tags in <code>&lt;head&gt;</code> on every page (Yoast SEO)</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> Yoast SEO generates canonical URLs based on the WordPress site URL setting. If still set to <code>northwoods.juxt.studio</code>, all canonical tags will point to the staging domain, telling Google to index the staging site instead of production.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Update WordPress Settings &rarr; General &rarr; Site URL to the production domain. Verify Yoast canonical tags update accordingly. This also affects Open Graph URLs and XML sitemaps.</p>
+</div>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-gold);background:#fffcf5;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p1">P1</span> 10. GA4 / Google Site Kit Property Verification</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> Google Site Kit v1.173.0 plugin configuration</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> Google Analytics 4 property and Google Site Kit are likely configured for the staging domain. Pageviews, events, and conversions will not track correctly on production unless reconfigured.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> In Google Analytics admin, add the production domain as a data stream. Update Site Kit connection if needed. Verify the GA4 measurement ID is correct for production.</p>
+</div>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-gold);background:#fffcf5;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p1">P1</span> 11. 17+ Placeholder Posts Indexed in Sitemap</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> WordPress posts with titles like "Title Here", default "Hello World" post</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> At least 17 placeholder/test posts exist with generic titles. These are likely included in the XML sitemap and will be crawled and indexed by Google, creating a poor impression.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Delete or unpublish all placeholder posts. Regenerate the XML sitemap. Confirm they no longer appear in the sitemap.</p>
+</div>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-light-blue);background:#f5fbff;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p2">P2</span> 12. Gravity Forms GUID Exposed in Page Source</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> Form embed on <a class="issue-link" href="https://northwoods.juxt.studio/prayer/" target="_blank">/prayer/</a> page (12-page Form #38)</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> The Gravity Forms unique identifier (GUID) is visible in the page source. While not directly exploitable, it leaks internal form metadata.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> This is low risk and standard Gravity Forms behavior, but review form permissions and ensure submissions are validated server-side.</p>
+</div>
+
+<div class="issue-card" style="border-left:4px solid var(--brand-light-blue);background:#f5fbff;padding:14px 16px;margin-bottom:14px;border-radius:6px">
+<h4 style="margin:0 0 6px"><span class="severity p2">P2</span> 13. Double File Extension in Video URL</h4>
+<p style="margin:4px 0;font-size:.88rem"><strong>Location:</strong> A video embed referencing a <code>.mp4.mp4</code> file path</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Issue:</strong> A media URL contains a double file extension (<code>.mp4.mp4</code>), likely from a filename error during upload. If the file is served correctly this is cosmetic, but it may cause issues with some video players or CDN caching.</p>
+<p style="margin:4px 0;font-size:.88rem"><strong>Action:</strong> Re-upload the video with the correct filename, or rename the file on the server and update the reference.</p>
+</div>
+
+</div>
+</div>
+
 <!-- RECOMMENDED FIX ORDER -->
 <div class="section" data-section="fixorder">
 <div class="section-header" onclick="toggleSection(this)">

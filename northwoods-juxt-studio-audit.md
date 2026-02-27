@@ -16,6 +16,8 @@
 7. [Site Structure & Page Hierarchy](#site-structure)
 8. [Pre-Launch Checklist](#pre-launch-checklist)
 9. [Pages Not Yet Checked (Rate Limited)](#pages-not-checked)
+10. [Developer Technical Issues](#developer-technical-issues)
+11. [Recommended Fix Order](#recommended-fix-order)
 
 ---
 
@@ -951,6 +953,88 @@ Directory:
 Configuration:
   <mpp-widget-configurator>  <mpp-widgets>  <mpp-pre-check>
 ```
+
+---
+
+## Developer Technical Issues
+
+These are **developer-specific technical items** separate from spelling/content issues. These require code changes, configuration updates, or infrastructure actions before the site goes live.
+
+### SECURITY
+
+#### 1. BugHerd API Key Exposed on Every Page (P0)
+- **File/Location:** Sitewide `<script>` tag loaded on every page
+- **Issue:** BugHerd QA sidebar is loaded on **all pages** with a visible API key (`e80shryijifxwxc5azhxbq`). This is a development/staging tool that must not ship to production.
+- **Action:** Remove the BugHerd `<script>` tag entirely before DNS cutover, or conditionally load only on staging.
+
+#### 2. Hardcoded Staging Domain in Widget Attributes (P0)
+- **File/Location:** Multiple page templates containing `<mpp-*>` and BlackPulp widget embed code
+- **Issue:** At least 6 pages have widget attributes pointing to `northwoods.juxt.studio` (the staging domain):
+  - `<mpp-group-finder>` → `redirecturl="https://northwoods.juxt.studio/widgets/group-detail/"`
+  - `<mpp-event-finder>` → `redirecturl="https://northwoods.juxt.studio/widgets/event-detail/"`
+  - `<mpp-opportunity-finder>` → `redirecturl="https://northwoods.juxt.studio/widgets/opportunity-detail/"`
+  - BlackPulp event widgets → `detailurl="https://northwoods.juxt.studio/widgets/event-detail/"`
+  - Custom CSS references → `customcss="https://northwoods.juxt.studio/wp-content/uploads/nw-widget-css.css"`
+- **Action:** Find-and-replace all instances of `northwoods.juxt.studio` with the production domain in widget attributes, custom CSS URLs, and redirect URLs.
+
+#### 3. reCAPTCHA Keys Domain-Locked (P1)
+- **File/Location:** Gravity Forms reCAPTCHA integration (Forms #19, #38)
+- **Issue:** Google reCAPTCHA v2 site keys are domain-bound. Keys registered for `northwoods.juxt.studio` will **fail silently** on the production domain, causing form submissions on `/give/` and `/prayer/` to break.
+- **Action:** Register the production domain in Google reCAPTCHA admin console and update the site key in Gravity Forms settings.
+
+#### 4. Ministry Platform SSO Domain Binding (P1)
+- **File/Location:** `northwoods.onlinegiving.org/assets/mpsso.js` and MP platform configuration
+- **Issue:** The SSO bridge script from `northwoods.onlinegiving.org` likely has domain whitelisting. If the staging domain is whitelisted but the production domain is not, the `<mpp-user-login>` component will fail on production, breaking all authenticated features (giving dashboard, groups, account management).
+- **Action:** Confirm that the production domain is whitelisted in both the Ministry Platform platform configuration and the online giving portal SSO settings.
+
+### CODE BUGS
+
+#### 5. Sitewide JavaScript Error — "thsi" Typo (P0)
+- **File/Location:** Appears on 10+ pages; likely a shared template, header/footer include, or Divi module
+- **Issue:** The word `"thsi"` appears in JavaScript fallback/error text across many pages. Two JS errors were observed in console on multiple pages. This suggests a typo in a string literal within a script tag or Divi code module.
+- **Action:** Search `wp-content/` for `"thsi"` and fix the typo. Check browser console for the two JS errors and resolve them.
+
+#### 6. CSS Class Typo Breaking Layout on `/widgets/event-detail/` (P1)
+- **File/Location:** Event detail page template or Divi module
+- **Issue:** A CSS class name is misspelled, causing a styling rule not to apply. The result is a layout break on event detail pages.
+- **Action:** Inspect the event detail page, find the misspelled class in the HTML, and correct it to match the intended CSS rule.
+
+#### 7. Broken URL with Encoded Space on `/volunteer/` (P1)
+- **File/Location:** SERVE button on `/volunteer/` page
+- **Issue:** A link URL contains a trailing `%20` (encoded space character), which will cause a 404 or unexpected redirect when clicked.
+- **Action:** Edit the SERVE button link in the Divi builder and remove the trailing space.
+
+### INFRASTRUCTURE
+
+#### 8. robots.txt Likely Blocking Crawlers (P0)
+- **File/Location:** `/robots.txt` at site root
+- **Issue:** Staging sites typically have `Disallow: /` in `robots.txt` to prevent search engine indexing. If this is not updated before launch, Google will not index the production site.
+- **Action:** Verify `robots.txt` contents. Replace staging disallow rules with appropriate production rules allowing crawling. Submit the updated sitemap to Google Search Console.
+
+#### 9. Canonical URLs Pointing to Staging Domain (P0)
+- **File/Location:** `<link rel="canonical">` tags in `<head>` on every page (Yoast SEO)
+- **Issue:** Yoast SEO generates canonical URLs based on the WordPress site URL setting. If still set to `northwoods.juxt.studio`, all canonical tags will point to the staging domain, telling Google to index the staging site instead of production.
+- **Action:** Update WordPress Settings → General → Site URL to the production domain. Verify Yoast canonical tags update accordingly. This also affects Open Graph URLs and XML sitemaps.
+
+#### 10. GA4 / Google Site Kit Property Verification (P1)
+- **File/Location:** Google Site Kit v1.173.0 plugin configuration
+- **Issue:** Google Analytics 4 property and Google Site Kit are likely configured for the staging domain. Pageviews, events, and conversions will not track correctly on production unless reconfigured.
+- **Action:** In Google Analytics admin, add the production domain as a data stream. Update Site Kit connection if needed. Verify the GA4 measurement ID is correct for production.
+
+#### 11. 17+ Placeholder Posts Indexed in Sitemap (P1)
+- **File/Location:** WordPress posts with titles like "Title Here", default "Hello World" post
+- **Issue:** At least 17 placeholder/test posts exist with generic titles. These are likely included in the XML sitemap and will be crawled and indexed by Google, creating a poor impression.
+- **Action:** Delete or unpublish all placeholder posts. Regenerate the XML sitemap. Confirm they no longer appear in the sitemap.
+
+#### 12. Gravity Forms GUID Exposed in Page Source (P2)
+- **File/Location:** Form embed on `/prayer/` page (12-page Form #38)
+- **Issue:** The Gravity Forms unique identifier (GUID) is visible in the page source. While not directly exploitable, it leaks internal form metadata.
+- **Action:** This is low risk and standard Gravity Forms behavior, but review form permissions and ensure submissions are validated server-side.
+
+#### 13. Double File Extension in Video URL (P2)
+- **File/Location:** A video embed referencing a `.mp4.mp4` file path
+- **Issue:** A media URL contains a double file extension (`.mp4.mp4`), likely from a filename error during upload. If the file is served correctly by the web server this is cosmetic, but it may cause issues with some video players or CDN caching.
+- **Action:** Re-upload the video with the correct filename, or rename the file on the server and update the reference.
 
 ---
 
